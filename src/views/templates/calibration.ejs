@@ -1,0 +1,801 @@
+<%
+const d = data || {};
+
+const imageField = "equipmentImage";
+
+const rows =
+    d.tables?.find(
+        table => table.name === "testData"
+    )?.rows || [];
+
+const viewMode =
+  typeof isView !== 'undefined' ? isView : false;
+%>
+
+<style>
+    /* ========== CERTIFICATE BASE ========== */
+
+    @page{
+    size:A4;
+    margin:auto;
+}
+
+   html,
+body{
+    margin: auto;
+    padding:0;
+    background:#ffffff3e;
+}
+
+body[data-cert-type="calibration"]{
+    background:#fff !important;
+}
+
+.certificate{
+    background:#fff;
+    width:210mm;
+    min-height:297mm;
+    margin: auto;
+    padding:0 18px 15px;
+    box-sizing:border-box;
+    box-shadow:0 0 12px rgba(0,0,0,.15);
+}
+
+    /* ========== LETTERHEAD ========== */
+    .cert-header{
+    text-align:center;
+    margin:0;
+    padding:0;
+}
+
+    .cert-header img#letterhead{
+    width:100%;
+    max-width:100%;
+    max-height:80px;
+    display:block;
+    margin:0;
+}
+
+    /* ========== TITLE ========== */
+    .title {
+        text-align: center;
+        font-size: 22px;
+        font-weight: bold;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin: 12px 0 18px;
+    }
+
+    /* ========== TOP INFO (2 columns) ========== */
+    .top-info {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px 28px;
+        margin-bottom: 16px;
+    }
+
+    .field {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 26px;
+    }
+
+    .field label {
+        font-weight: bold;
+        white-space: nowrap;
+        min-width: 115px;
+    }
+
+    .field input {
+        flex: 1;
+        border: none;
+        border-bottom: 1px solid #000;
+        background: transparent;
+        font-size: 13px;
+        padding: 2px 4px;
+        outline: none;
+    }
+
+    /* ========== CERTIFICATION TEXT ========== */
+    .cert-text {
+        font-size: 12px;
+        text-align: justify;
+        line-height: 1.45;
+        margin: 16px 0 18px;
+    }
+
+    /* ========== SECTION TITLE ========== */
+    .section-title {
+        text-align: center;
+        font-weight: bold;
+        font-size: 14px;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+    }
+
+    /* ========== TEST DATA TABLE ========== */
+    #testTable {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 12px;
+    }
+
+    #testTable th,
+    #testTable td {
+        border: 1px solid #000;
+        padding: 6px 8px;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    #testTable th {
+        background: #f5f5f5;
+        font-weight: bold;
+        font-size: 12px;
+    }
+
+    #testTable input {
+        width: 100%;
+        border: none;
+        background: transparent;
+        text-align: center;
+        font-size: 13px;
+        outline: none;
+    }
+
+    /* ========== EQUIPMENT IMAGE ========== */
+.equipment-image-section {
+    margin: 24px 0;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+.equipment-image-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+.equipment-image-box {
+    width: 220px;
+    height: 120px;
+    border: 1px solid #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    overflow: hidden;
+    background: #fff;
+}
+
+.equipment-image {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+}
+
+.image-upload-container {
+    margin-top: 12px;
+    display: flex;
+    justify-content: center;
+}
+
+.image-upload-container input[type="file"] {
+    text-align: center;
+}
+
+/* ===========================
+   FOOTER
+=========================== */
+
+.certificate-footer{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-end;
+
+    margin-top:25px;
+
+    gap:20px;
+
+    page-break-inside:avoid;
+
+    break-inside:avoid;
+
+}
+
+.footer-left{
+
+    width:30%;
+
+}
+
+.footer-title{
+
+    font-weight:bold;
+
+    font-size:13px;
+
+    margin-bottom:6px;
+
+}
+
+.signature-img{
+
+    width:140px;
+
+    height:auto;
+
+    display:block;
+
+}
+
+.signature-img{
+    display:none;
+}
+
+.footer-name{
+
+    font-weight:bold;
+
+    margin-top:5px;
+
+    font-size:12px;
+
+}
+
+.footer-qualification{
+
+    font-size:11px;
+
+}
+
+.footer-center{
+
+    width:40%;
+
+    display:flex;
+
+    justify-content:center;
+
+}
+
+.stamp-wrapper{
+
+    position:relative;
+
+    display:inline-block;
+
+}
+
+.company-block{
+
+    width:170px;
+
+    height:auto;
+
+}
+
+.stamp-overlay{
+
+    position:absolute;
+
+    left:0;
+
+    right:0;
+
+    bottom:15px;
+
+    text-align:center;
+
+}
+
+.stamp-date{
+
+    font-size:12px;
+
+    font-weight:bold;
+
+    color:#3f9cff;
+
+}
+
+.footer-right{
+
+    width:30%;
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    align-items:flex-end;
+
+    gap:10px;
+
+}
+
+.cert-logo{
+
+    height:42px;
+
+    width:auto;
+
+}
+    /* ========== BUTTONS (only when not PDF) ========== */
+    .delete-btn {
+        background: #e74c3c;
+        color: white;
+        border: none;
+        border-radius: 3px;
+        width: 26px;
+        height: 26px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    button {
+        padding: 6px 14px;
+        background: #2c3e50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 13px;
+    }
+
+    button:hover {
+        opacity: 0.9;
+    }
+
+    /* ===========================
+   FLOATING DOWNLOAD BUTTON
+=========================== */
+
+.floating-download {
+    position: fixed;
+    top: 18px;
+    right: 24px;
+    z-index: 9999;
+}
+
+.download-btn {
+    background: #0f172a;
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    padding: 12px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.download-btn:hover {
+    background: #1e293b;
+    transform: translateY(-1px);
+}
+
+    /* ========== PRINT / PDF ========== */
+
+    @media print{
+
+    html,
+    body{
+        margin:0 !important;
+        padding:0 !important;
+        background:#fff !important;
+    }
+
+    .certificate{
+        width:100%;
+        margin:0;
+        padding:0 18px 15px;
+        box-shadow:none;
+        background:#fff;
+    }
+
+    .pdf-hide{
+        display:none !important;
+    }
+   
+       .floating-download {
+        display: none !important;
+    
+         }
+}
+</style>
+
+<body data-cert-type="calibration" data-is-view="<%= viewMode ? 'true' : 'false' %>">
+
+
+<!-- ========== YOUR EXISTING HTML STARTS HERE ========== -->
+<div id="certificate" class="certificate">
+
+        <% if (!isPdf) { %>
+    <div class="floating-download pdf-hide">
+       <button
+    type="button"
+    class="download-btn"
+    onclick="downloadPDF(event)"
+>
+    ⬇ Download PDF
+</button>
+
+    </div>
+    <% } %>
+
+
+    <!-- ===================================== -->
+    <!-- LETTERHEAD -->
+    <!-- ===================================== -->
+    <div class="cert-header">
+      <img
+id="letterhead"
+src="<%= branding?.letterhead || '' %>"
+>
+
+    </div>
+
+    <!-- ===================================== -->
+    <!-- TITLE -->
+    <!-- ===================================== -->
+    <div class="title">
+        CALIBRATION CERTIFICATE
+    </div>
+
+    <!-- ===================================== -->
+    <!-- TOP INFORMATION (2-column grid) -->
+    <!-- ===================================== -->
+    <div class="top-info">
+
+        <!-- Left Column -->
+        <div class="field">
+            <label>CLIENT:</label>
+            <input type="text" name="client" value="<%= d.client || '' %>">
+        </div>
+
+        <!-- Right Column -->
+        <div class="field">
+            <label>CERT NO:</label>
+            <input type="text" name="certNo" value="<%= d.certNo || '' %>">
+        </div>
+
+        <div class="field">
+            <label>EQUIPMENT:</label>
+            <input type="text" name="equipment" value="<%= d.equipment || '' %>">
+        </div>
+
+        <div class="field">
+            <label>UNIT UNDER TEST (UUT)</label>
+            <input type="text" name="uut" value="<%= d.uut || '' %>">
+        </div>
+
+        <div class="field">
+            <label>MANUFACTURER:</label>
+            <input type="text" name="manufacturer" value="<%= d.manufacturer || '' %>">
+        </div>
+
+        <div class="field">
+            <label>SERVICE:</label>
+            <input type="text" name="service" value="<%= d.service || 'CALIBRATION' %>">
+        </div>
+
+        <div class="field">
+            <label>RANGE:</label>
+            <input type="text" name="range" value="<%= d.range || '' %>">
+        </div>
+
+        <div class="field">
+            <label>METHOD:</label>
+            <input type="text" name="method" value="<%= d.method || '' %>">
+        </div>
+
+        <div class="field">
+            <label>SERIAL NO:</label>
+            <input type="text" name="serialNo" value="<%= d.serialNo || '' %>">
+        </div>
+
+        <div class="field">
+            <label>TRACEABILITY:</label>
+            <input type="text" name="traceability" value="<%= d.traceability || '' %>">
+        </div>
+
+        <div class="field">
+            <label>SCREEN SIZE:</label>
+            <input type="text" name="screenSize" value="<%= d.screenSize || '' %>">
+        </div>
+
+        <div class="field">
+            <label>AMBIENT TEMPS:</label>
+            <input type="text" name="ambientTemps" value="<%= d.ambientTemps || '' %>">
+        </div>
+
+        <div class="field">
+            <label>TEST DATE:</label>
+            <input
+    id="inspectionDate"
+    type="date"
+    name="testDate"
+    data-stamp-date
+    value="<%= d.testDate || '' %>"
+>
+        </div>
+
+        <div class="field">
+            <label>TAG NO:</label>
+            <input type="text" name="tagNo" value="<%= d.tagNo || '' %>">
+        </div>
+
+        <div class="field">
+            <label>DUE DATE:</label>
+            <input type="date" name="dueDate" value="<%= d.dueDate || '' %>">
+        </div>
+
+        <div class="field">
+            <label>TYPE:</label>
+            <input type="text" name="type" value="<%= d.type || '' %>">
+        </div>
+
+    </div>
+
+    <!-- ===================================== -->
+    <!-- CERTIFICATION STATEMENT -->
+    <!-- ===================================== -->
+    <div class="cert-text">
+        <strong>PANDA INTEGRATED SERVICES LIMITED</strong>
+        certifies that the above listed instrument has been tested for
+        conformity to all specifications as published (unless otherwise noted).
+        It has been tested using measurement standards traceable to the
+        National Institute of Standard and Technology (NIST) accepted intrinsic
+        standards of measurement or derived by the ratio type of self-calibration
+        techniques. This calibration complies with
+        <strong>MIL-STD 45662A</strong>
+        and is traceable to
+        <strong>NIST</strong>
+        in accordance with
+        <strong>ASME B40.1</strong>
+        and conforms to the accuracy grade
+        <strong>3A</strong>
+        over the entire scale.
+        <br><br>
+        This report may only be reproduced with the written approval of the
+        calibration laboratory.
+    </div>
+
+    <!-- ===================================== -->
+    <!-- TEST DATA -->
+    <!-- ===================================== -->
+    <div class="section-title">TEST DATA</div>
+
+    <table id="testTable">
+        <thead>
+            <tr>
+                <th style="width:35%">ACTUAL APPLIED (PSI)</th>
+                <th style="width:35%">INSTRUMENT UNDER TEST (PSI)</th>
+                <th style="width:20%">REMARK</th>
+                <% if (!isPdf) { %>
+                <th class="pdf-hide" style="width:10%">ACTION</th>
+                <% } %>
+            </tr>
+        </thead>
+
+        <tbody
+    id="tableBody"
+    data-table-name="testData"
+    data-add-row="testData"
+>
+             <% if (rows.length) { %> 
+                <% rows.forEach(function(row){ %>
+                <tr>
+                    <td>
+                        <input type="text" name="actualApplied" value="<%= row.actualApplied || '' %>">
+                    </td>
+                    <td>
+                        <input type="text" name="instrumentReading" value="<%= row.instrumentReading || '' %>">
+                    </td>
+                    <td>
+                        <input type="text" name="remark" value="<%= row.remark || '' %>">
+                    </td>
+                    <% if (!isPdf) { %>
+                    <td class="pdf-hide">
+                       <button
+type="button"
+class="delete-btn"
+onclick="deleteRow(this)"
+>
+
+×
+
+</button>
+
+                    </td>
+                    <% } %>
+                </tr>
+                <% }) %>
+            <% } else { %>
+                <% for(let i = 0; i < 1; i++){ %>
+               <tr>
+    <td><input type="text" name="actualApplied"></td>
+    <td><input type="text" name="instrumentReading"></td>
+    <td><input type="text" name="remark"></td>
+
+    <% if (!isPdf) { %>
+    <td class="pdf-hide">
+        <button type="button"
+                class="delete-btn"
+                onclick="deleteRow(this)">
+            ✕
+        </button>
+    </td>
+    <% } %>
+</tr>
+                <% } %>
+            <% } %>
+        </tbody>
+    </table>
+
+    <% if (!isPdf) { %>
+    <div class="pdf-hide" style="margin-top:10px; text-align:right;">
+    <button
+    type="button"
+    onclick="addRow('testData')"
+>
+    + Add Row
+</button>
+
+    </div>
+    <% } %>
+
+    <!-- ===================================== -->
+    <!-- EQUIPMENT IMAGE -->
+    <!-- ===================================== -->
+<div class="equipment-image-section">
+
+    <div class="equipment-image-title">
+        EQUIPMENT IMAGE
+    </div>
+
+    <input
+        id="<%= imageField %>Input"
+        type="file"
+        accept="image/*"
+        data-field="<%= imageField %>"
+        onchange="previewImage(this,'<%= imageField %>')"
+        style="display:none;"
+    >
+
+    <div class="equipment-image-box">
+
+        <img
+            id="<%= imageField %>"
+            class="equipment-image"
+            src="<%= d.images?.[imageField] || d.equipmentImage || '' %>"
+            style="<%= (d.images?.[imageField] || d.equipmentImage) ? '' : 'display:none;' %>"
+        >
+
+    </div>
+
+    <% if (!isPdf) { %>
+
+    <div class="image-upload-container pdf-hide">
+
+        <button
+            type="button"
+            onclick="document.getElementById('<%= imageField %>Input').click()"
+        >
+            🖼 Select Image
+        </button>
+
+    </div>
+
+    <% } %>
+
+</div>
+
+<div class="certificate-footer">
+
+    <!-- Inspector -->
+    <div class="footer-left">
+
+        <div class="footer-title">
+            TESTED BY
+        </div>
+
+        <img
+            id="inspectorSignature"
+            class="signature-img"
+            src="<%= branding?.signature || '' %>"
+        >
+
+        <div class="footer-name">
+            ADAMS IWEZOR
+        </div>
+
+        <div class="footer-qualification">
+            ASNT LEVEL II UT, PT & MT
+        </div>
+
+    </div>
+
+    <!-- Stamp -->
+    <div class="footer-center">
+
+        <div class="stamp-wrapper">
+
+            <img
+                id="stamp"
+                class="company-block"
+                src="<%= branding?.stamp || '' %>"
+            >
+
+            <div class="stamp-overlay">
+
+                <div class="stamp-date">
+
+                    DATE :
+
+                    <span id="stampDate">
+                        <%= d.testDate || '' %>
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Logos -->
+    <div class="footer-right">
+
+        <% if (branding?.asnt) { %>
+        <img
+            id="asnt"
+            class="cert-logo"
+            src="<%= branding.asnt %>"
+        >
+        <% } %>
+
+        <% if (branding?.leea) { %>
+        <img
+            id="leea"
+            class="cert-logo"
+            src="<%= branding.leea %>"
+        >
+        <% } %>
+
+        <% if (branding?.awrf) { %>
+        <img
+            id="awrf"
+            class="cert-logo"
+            src="<%= branding.awrf %>"
+        >
+        <% } %>
+
+    </div>
+
+</div>
+
+<% if (!isPdf) { %>
+
+<script src="/js/certificate.js"></script>
+
+<% } %>
+
+</body>

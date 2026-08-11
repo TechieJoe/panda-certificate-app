@@ -1,0 +1,1291 @@
+<%
+const d = data || {};
+
+const imageField = "equipmentImg";
+
+const rows =
+  d.tables?.find(
+    table => table.name === "load-test"
+  )?.rows || [];
+
+  const viewMode =
+  typeof isView !== 'undefined' ? isView : false;
+
+%>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>
+  Certificate Of Load Test
+</title>
+
+<style>
+
+@page{
+  size:A4;
+  margin:0;
+}
+
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 11px;
+        background: #f2f2f2;
+        margin: 0;
+      }
+
+      /* A4 */
+      #certificate {
+        width: 210mm;
+        margin: auto;
+        padding: 5mm 20mm 20mm 20mm;
+        box-sizing: border-box;
+        background: #fff;
+        overflow: hidden;
+      }
+
+.cert-header{
+  margin:-5mm -12mm 5mm -12mm;
+}
+
+.cert-header img{
+  width:100%;
+  display:block;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+td,
+th{
+  border:1px solid #000;
+  padding:2px 3px;
+  vertical-align:middle;
+  line-height:1.1;
+}
+
+.no-border,
+.no-border td,
+.no-border tr{
+  border:none !important;
+}
+
+.center{
+  text-align:center;
+}
+
+.right{
+  text-align:right;
+}
+
+.bold{
+  font-weight:bold;
+}
+
+input,
+textarea,
+select{
+  width:100%;
+  border:none;
+  outline:none;
+  background:transparent;
+  font-family:inherit;
+  font-size:10px;
+  min-height: 18px;
+  box-sizing:border-box;
+}
+
+textarea{
+  resize:none;
+}
+
+.pdf-hide{
+  display: <%= isPdf ? "none" : "block" %>;
+}
+
+.action-cell{
+  width:40px;
+  text-align:center;
+}
+
+.delete-btn{
+
+border:none;
+
+background:none;
+
+color:#c00;
+
+font-size:18px;
+
+cursor:pointer;
+
+font-weight:bold;
+
+}
+
+
+.delete-btn:hover{
+  opacity:.85;
+}
+
+.add-btn{
+  padding:7px 12px;
+  cursor:pointer;
+}
+
+/* ================================
+   FLOATING DOWNLOAD BUTTON
+================================ */
+
+.floating-toolbar{
+    position:fixed;
+    top:18px;
+    right:24px;
+    z-index:9999;
+}
+
+.toolbar-btn{
+
+    background:#0f172a;
+
+    color:#fff;
+
+    border:none;
+
+    border-radius:999px;
+
+    padding:12px 18px;
+
+    font-size:13px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    box-shadow:0 4px 12px rgba(0,0,0,.18);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:8px;
+
+    transition:
+        background .2s ease,
+        transform .2s ease,
+        box-shadow .2s ease;
+
+}
+
+.toolbar-btn:hover{
+
+    background:#1e293b;
+
+    transform:translateY(-1px);
+
+    box-shadow:0 6px 16px rgba(0,0,0,.22);
+
+}
+
+.toolbar-btn:active{
+
+    transform:translateY(0);
+
+}
+
+
+/* ================================
+   HOURGLASS
+================================ */
+
+.toolbar-btn.generating{
+
+    min-width:150px;
+
+    background:#334155;
+
+}
+
+.hourglass{
+
+    display:inline-block;
+
+    font-size:17px;
+
+    animation:
+        hourglass-spin
+        1.2s
+        ease-in-out
+        infinite;
+
+}
+
+
+@keyframes hourglass-spin{
+
+    0%{
+        transform:rotate(0deg);
+    }
+
+    40%{
+        transform:rotate(0deg);
+    }
+
+    50%{
+        transform:rotate(180deg);
+    }
+
+    90%{
+        transform:rotate(180deg);
+    }
+
+    100%{
+        transform:rotate(360deg);
+    }
+
+}
+
+
+/* ================================
+   PDF GENERATING STATE
+================================ */
+
+body.pdf-generating
+.floating-toolbar{
+
+    pointer-events:none;
+
+}
+
+h1{
+    margin:0;
+}
+
+h2{
+    margin:2px 0;
+    font-size:15px;
+}
+
+h3{
+    margin:1px 0;
+    font-size:12px;
+}
+
+p{
+    margin:4px 0;
+}
+
+br{
+    display:block;
+    margin:2px 0;
+}
+
+/* ===================================== */
+/* EQUIPMENT IMAGE */
+/* ===================================== */
+
+.equipment-image-section{
+    margin:15px auto;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    page-break-inside:avoid;
+    break-inside:avoid;
+}
+
+.equipment-image-title{
+    font-size:16px;
+    font-weight:bold;
+    text-align:center;
+    margin-bottom:8px;
+}
+
+.image-box{
+    width:150px;
+    height:150px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    overflow:hidden;
+
+    border:1px solid #000;
+}
+
+.image-box img{
+    max-width:80%;
+    max-height:80%;
+    width:auto;
+    height:auto;
+    object-fit:contain;
+    display:block;
+}
+
+.image-upload-container{
+    margin-top:10px;
+    text-align:center;
+}
+
+.image-upload-container button{
+    padding:6px 14px;
+    cursor:pointer;
+}
+
+
+.footer-table td{
+  height:70px;
+}
+
+      /* FOOTER */
+    .certificate-footer{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+
+    page-break-inside:avoid !important;
+    break-inside:avoid !important;
+
+    margin-top:8px;
+}
+
+      /* LEFT */
+      .footer-left {
+        width: 28%;
+      }
+
+      .footer-left,
+.footer-center,
+.footer-right{
+    page-break-inside:avoid;
+    break-inside:avoid;
+}
+
+      .inspected-title {
+        font-size: 13px;
+        font-weight: 700;
+        margin-bottom: 5px;
+      }
+
+      .signature-img {
+        width: 140px;
+        margin: 6px 0;
+      }
+
+      .inspector-name {
+        font-weight: 700;
+        font-size: 13px;
+      }
+
+      .inspector-level {
+        font-size: 12px;
+      }
+
+      /* CENTER STAMP */
+      .footer-center {
+        width: 44%;
+        text-align: center;
+      }
+
+      .stamp-wrapper {
+        position: relative;
+        display: inline-block;
+        max-width: 340px;
+        width: 100%;
+      }
+
+      .company-block {
+        max-height: 80px;
+        width: 100%;
+      }
+
+      .stamp-overlay {
+        position: absolute;
+        bottom: 13px;
+        left: 20px;
+        right: 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .stamp-date {
+        font-size: 12px;
+        font-weight: 600;
+        color: skyblue;
+      }
+
+      .stamp-signature {
+        height: 38px;
+        object-fit: contain;
+      }
+
+      /* RIGHT LOGOS */
+      .footer-right {
+        width: 28%;
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+      }
+
+      .cert-logo {
+        height: 40px;
+      }
+
+.footer-wrapper{
+    margin-top:6px;
+}
+
+.certificate-footer{
+    margin-top:6px;
+}
+
+
+@media print{
+
+.pdf-hide{
+display:none !important;
+}
+
+    .floating-toolbar{
+        display:none !important;
+    }
+
+
+}
+
+</style>
+
+</head>
+
+<body data-cert-type="LOAD-TEST" data-is-view="<%= viewMode ? 'true' : 'false' %>">
+
+<div id="certificate">
+
+  <!-- ===================================== -->
+<!-- FOOTER -->
+<!-- ===================================== -->
+
+
+<% if (!isPdf) { %>
+
+<div class="floating-toolbar pdf-hide">
+
+    <button
+        type="button"
+        class="toolbar-btn"
+        onclick="downloadPDF(event)"
+        title="Download PDF"
+    >
+        <span class="download-icon">⬇</span>
+        <span class="download-text">Download PDF</span>
+    </button>
+
+</div>
+
+<% } %>
+
+<div class="cert-header">
+
+<img
+id="letterhead"
+src="<%= branding?.letterhead || '' %>"
+>
+
+
+<!-- ============================= -->
+<!-- TITLE -->
+<!-- ============================= -->
+
+<div class="center">
+
+  <h1
+    style="
+      margin:10px;
+      font-size:28px;
+      font-weight:bold;
+    "
+  >
+    CERTIFICATE OF LOAD TEST
+  </h1>
+
+  <div
+    style="
+      margin-top:4px;
+      font-size:13px;
+      line-height:1.35;
+    "
+  >
+    <div>
+      <strong>STATUTORY INSTRUMENTS 1998 NO: 2307</strong>
+    </div>
+
+    <div>
+      The Lifting Operations and Lifting Equipment Regulations 1998
+    </div>
+
+    <div>
+      <strong>STATUTORY INSTRUMENTS 1992 NO: 3073</strong>
+    </div>
+
+    <div>
+      The Supply of Machinery (Safety) Regulations 1992
+    </div>
+
+    <div>
+      <strong>STATUTORY INSTRUMENTS 1998 NO: 2306</strong>
+    </div>
+
+    <div>
+      The Provision and Use of Work Regulations 1998
+    </div>
+
+  </div>
+
+</div>
+
+<br>
+
+<table>
+
+  <tr>
+
+    <td
+      colspan="3"
+      style="
+        border:none;
+      "
+    >
+    </td>
+
+<td
+  style="
+    border:none;
+    width:280px;
+  "
+>
+
+<div
+  style="
+    display:flex;
+    justify-content:flex-end;
+    align-items:center;
+    gap:8px;
+  "
+>
+
+<span
+  style="
+    font-weight:bold;
+    white-space:nowrap;
+  "
+>
+CERT NO:
+</span>
+
+<input
+  name="certificateNo"
+  value="<%= d.certificateNo || '' %>"
+  style="
+    width:180px;
+    border-bottom:1px solid #000;
+    text-align:center;
+  "
+>
+
+</div>
+
+</td>
+  </tr>
+
+</table>
+
+<table>
+
+  <tr
+    class="center"
+    style="font-weight:bold;"
+  >
+
+    <td>
+      CLIENT / OWNER
+    </td>
+
+    <td>
+      DEPT / DIVISION
+    </td>
+
+    <td>
+      LOCATION
+    </td>
+
+    <td>
+      DATE OF INSPECTION
+    </td>
+
+  </tr>
+
+  <tr>
+
+    <td>
+
+      <input
+        name="clientOwner"
+        value="<%= d.clientOwner || '' %>"
+      >
+
+    </td>
+
+    <td>
+
+      <input
+        name="departmentDivision"
+        value="<%= d.departmentDivision || '' %>"
+      >
+
+    </td>
+
+    <td>
+
+      <input
+        name="location"
+        value="<%= d.location || '' %>"
+      >
+
+    </td>
+
+    <td>
+
+      <input
+        id="inspectionDate"
+        type="date"
+        name="inspectionDate"
+        data-stamp-date
+        value="<%= d.inspectionDate || '' %>"
+      >
+
+    </td>
+
+  </tr>
+
+</table>
+
+<br>
+
+<h2
+  class="center"
+  style="
+    margin:0 0 8px 0;
+    font-size:16px;
+  "
+>
+  LOAD TEST REPORT
+</h2>
+
+<table>
+
+  <thead>
+
+    <tr class="center">
+
+      <th style="width:18%;">
+        EQUIPMENT NO
+      </th>
+
+      <th style="width:34%;">
+        EQUIPMENT DESCRIPTION
+      </th>
+
+      <th style="width:11%;">
+        TARE
+      </th>
+
+      <th style="width:11%;">
+        SWL
+      </th>
+
+      <th style="width:11%;">
+        GROSS
+      </th>
+
+      <th style="width:15%;">
+        LIFT POINT
+      </th>
+
+      <% if (!isPdf) { %>
+        <th
+          class="pdf-hide"
+          style="width:45px;"
+        >
+          DEL
+        </th>
+      <% } %>
+
+    </tr>
+
+  </thead>
+
+  <tbody
+    id="loadTable"
+    data-table-name="load-test"
+    data-add-row="load-test"
+  >
+
+    <% if (rows.length) { %>
+
+      <% rows.forEach((row,index)=>{ %>
+
+        <tr>
+
+          <td>
+
+            <input
+              value="<%= row[0] || '' %>"
+            >
+
+          </td>
+
+          <td>
+
+            <input
+              value="<%= row[1] || '' %>"
+            >
+
+          </td>
+
+          <td>
+
+            <input
+              value="<%= row[2] || '' %>"
+            >
+
+          </td>
+
+          <td>
+
+            <input
+              value="<%= row[3] || '' %>"
+            >
+
+          </td>
+
+          <td>
+
+            <input
+              value="<%= row[4] || '' %>"
+            >
+
+          </td>
+
+          <td>
+
+            <input
+              value="<%= row[5] || '' %>"
+            >
+
+          </td>
+
+          <% if (!isPdf) { %>
+
+          <td class="action-cell pdf-hide">
+
+            <button
+              type="button"
+              class="delete-btn"
+              onclick="deleteRow(this)"
+            >
+              🗑️
+            </button>
+
+          </td>
+
+          <% } %>
+
+        </tr>
+
+      <% }) %>
+
+    <% } else { %>
+
+      <tr>
+
+        <td>
+          <input>
+        </td>
+
+        <td>
+          <input>
+        </td>
+
+        <td>
+          <input>
+        </td>
+
+        <td>
+          <input>
+        </td>
+
+        <td>
+          <input>
+        </td>
+
+        <td>
+          <input>
+        </td>
+
+        <% if (!isPdf) { %>
+
+        <td class="action-cell pdf-hide">
+
+         <button
+class="delete-btn"
+onclick="deleteRow(this)"
+title="Delete row"
+>
+
+×
+
+</button>
+        </td>
+
+        <% } %>
+
+      </tr>
+
+    <% } %>
+
+  </tbody>
+
+</table>
+<br/>
+
+<div
+class="pdf-hide"
+style="
+text-align:left;
+margin-top:5px;
+"
+>
+
+<button
+class="icon-btn"
+onclick="addRow()"
+title="Add equipment"
+>
+
+＋
+
+</button>
+
+</div>
+
+<!-- ===================================== -->
+<!-- EQUIPMENT DETAILS -->
+<!-- ===================================== -->
+
+<br>
+
+<table class="no-border">
+
+  <tr class="no-border">
+
+    <td
+      class="no-border"
+      width="60%"
+    >
+
+      <h3
+        style="margin-bottom:4px;"
+      >
+        EQUIPMENT USE
+      </h3>
+
+      <input
+        name="equipmentUse"
+        value="<%= d.equipmentUse || '' %>"
+      >
+
+      <br><br>
+
+      <h3
+        style="margin-bottom:4px;"
+      >
+        EQUIPMENT CAL DATE
+      </h3>
+
+      <input
+        type="date"
+        name="equipmentCalDate"
+        value="<%= d.equipmentCalDate || '' %>"
+      >
+
+    </td>
+
+    <td
+      class="no-border"
+    >
+
+      <h3
+        style="margin-bottom:4px;"
+      >
+        EQUIPMENT SERIAL NO.
+      </h3>
+
+      <input
+        name="equipmentSerialNo"
+        value="<%= d.equipmentSerialNo || '' %>"
+      >
+
+      <br><br>
+
+      <h3
+        style="margin-bottom:4px;"
+      >
+        COUNTRY OF ORIGIN
+      </h3>
+
+      <input
+        name="countryOfOrigin"
+        value="<%= d.countryOfOrigin || '' %>"
+      >
+
+    </td>
+
+  </tr>
+
+</table>
+
+<br>
+
+<!-- ===================================== -->
+<!-- TEST INFORMATION -->
+<!-- ===================================== -->
+
+<table>
+
+<tr>
+
+<td width="55%">
+
+  <b>
+    STANDARD USED:
+  </b>
+
+  <input
+    name="standardUsed"
+    value="<%= d.standardUsed || '' %>"
+  >
+
+  <br>
+
+  <b>
+    NDT METHOD:
+  </b>
+
+  <input
+    name="ndtMethod"
+    value="<%= d.ndtMethod || '' %>"
+  >
+
+  <br>
+
+  <b>
+    CONTACT MEDIA:
+  </b>
+
+  <input
+    name="contactMedia2"
+    value="<%= d.contactMedia2 || '' %>"
+  >
+
+  <br>
+
+  <b>
+    INDICATOR:
+  </b>
+
+  <input
+    name="indicator2"
+    value="<%= d.indicator2 || '' %>"
+  >
+
+</td>
+
+<td>
+
+  <b>
+    TEST PROCEDURE:
+  </b>
+
+  <input
+    name="testProcedure2"
+    value="<%= d.testProcedure2 || '' %>"
+  >
+
+  <br>
+
+  <b>
+    POLE SPACE:
+  </b>
+
+  <input
+    name="poleSpace"
+    value="<%= d.poleSpace || '' %>"
+  >
+
+  <br>
+
+  <b>
+    EQUIPMENT SERIAL NO:
+  </b>
+
+  <input
+    name="equipmentSerialNo2"
+    value="<%= d.equipmentSerialNo2 || '' %>"
+  >
+
+  <br>
+
+  <b>
+    TEST WEIGHT:
+  </b>
+
+  <input
+    name="testWeight"
+    value="<%= d.testWeight || '' %>"
+  >
+
+</td>
+
+</tr>
+
+</table>
+
+<br>
+
+<p>
+
+<strong>
+REMARK:
+</strong>
+
+<br>
+
+The above equipment was subjected to the specified load test and found satisfactory at the time of inspection in accordance with the relevant applicable standards.
+
+</p>
+
+<br>
+
+<!-- ===================================== -->
+<!-- EQUIPMENT IMAGE -->
+<!-- ===================================== -->
+
+<div class="equipment-image-section">
+
+    <div class="equipment-image-title">
+        EQUIPMENT IMAGE
+    </div>
+
+    <input
+        id="<%= imageField %>Input"
+        type="file"
+        accept="image/*"
+        data-field="<%= imageField %>"
+        onchange="previewImage(this,'<%= imageField %>')"
+        style="display:none;"
+    >
+
+    <div class="image-box">
+
+        <img
+            id="<%= imageField %>"
+            src="<%= d.images?.[imageField] || '' %>"
+            alt="Equipment Image"
+        >
+
+    </div>
+
+    <% if (!isPdf) { %>
+
+    <div class="pdf-hide image-upload-container">
+
+        <button
+            type="button"
+            onclick="document.getElementById('<%= imageField %>Input').click()"
+        >
+            🖼 Select Image
+        </button>
+
+    </div>
+
+    <% } %>
+
+</div>
+
+<!-- ===================================== -->
+<!-- FOOTER -->
+<!-- ===================================== -->
+
+<div>
+
+<div class="footer-wrapper">
+<div class="certificate-footer">
+
+  <!-- LEFT -->
+
+  <div class="footer-left">
+
+    <div class="inspected-title">
+      TESTED BY
+    </div>
+
+    <img
+      id="inspectorSignature"
+      class="signature-img"
+      src="<%= branding?.signature || '' %>"
+    >
+
+    <div class="inspector-name">
+      ADAMS IWEZOR
+    </div>
+
+    <div class="inspector-level">
+      ASNT LEVEL II UT, PT & MT
+    </div>
+
+  </div>
+
+  <!-- CENTER -->
+
+  <div class="footer-center">
+
+    <div class="stamp-wrapper">
+
+      <img
+        id="stamp"
+        class="company-block"
+        src="<%= branding?.stamp || '' %>"
+      >
+
+      <div class="stamp-overlay">
+
+        <div class="stamp-date">
+
+          DATE :
+
+          <span id="stampDate">
+
+            <%= d.inspectionDate || '' %>
+
+          </span>
+
+        </div>
+
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- RIGHT -->
+
+  <div class="footer-right">
+
+    <img
+      id="asnt"
+      class="cert-logo"
+      src="<%= branding?.asnt || '' %>"
+    >
+
+    <img
+      id="leea"
+      class="cert-logo"
+      src="<%= branding?.leea || '' %>"
+    >
+
+    <img
+      id="awrf"
+      class="cert-logo"
+      src="<%= branding?.awrf || '' %>"
+    >
+
+  </div>
+
+</div>
+</div>
+</div>
+
+<!-- ===================================== -->
+<!-- UNIVERSAL JS -->
+<!-- ===================================== -->
+
+<% if (!isPdf) { %>
+
+<script src="/js/certificate.js"></script>
+
+<% } %>
+
+<!-- ===================================== -->
+<!-- DATE SYNC -->
+<!-- ===================================== -->
+
+<script>
+
+const inspectionDate =
+  document.getElementById("inspectionDate");
+
+const stampDate =
+  document.getElementById("stampDate");
+
+if (inspectionDate && stampDate) {
+
+  const updateStampDate = () => {
+
+    if (!inspectionDate.value) {
+
+      stampDate.textContent = "";
+
+      return;
+
+    }
+
+    const d = new Date(inspectionDate.value);
+
+    stampDate.textContent =
+      d.toLocaleDateString(
+        "en-GB",
+        {
+          day: "2-digit",
+          month: "2-digit",
+          year: "2-digit",
+        }
+      );
+
+  };
+
+  updateStampDate();
+
+  inspectionDate.addEventListener(
+    "input",
+    updateStampDate
+  );
+
+}
+
+</script>
+
+</body>
+
+</html>

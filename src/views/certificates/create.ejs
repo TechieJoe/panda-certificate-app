@@ -1,0 +1,53 @@
+<div class="create-page">
+
+    <div class="page-header">
+
+        <h1>Create Certificate</h1>
+
+        <p>
+            Choose a certificate template to begin creating a new inspection report.
+        </p>
+
+    </div>
+
+    <div class="certificate-grid">
+
+        <% certificateTypes.forEach(type => { %>
+
+            <a href="<%= type.url %>" class="certificate-card">
+
+                <div class="card-icon">
+
+                    <% if(type.name === "NDT"){ %>
+                        🛠️
+                    <% } else if(type.name === "MPI-UT"){ %>
+                        🔎
+                    <% } else if(type.name === "calibration"){ %>
+                        📏
+                    <% } else if(type.name === "load-test"){ %>
+                        🏗️
+                    <% } else if(type.name === "drill-pipe"){ %>
+                        🛢️
+                    <% } else { %>
+                        📄
+                    <% } %>
+
+                </div>
+
+                <h3><%= type.title %></h3>
+
+                <p>
+                    Create a new <%= type.title.toLowerCase() %>.
+                </p>
+
+                <span class="create-btn">
+                    Create →
+                </span>
+
+            </a>
+
+        <% }) %>
+
+    </div>
+
+</div>

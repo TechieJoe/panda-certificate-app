@@ -1,0 +1,114 @@
+<h1 class="company-name">
+    PANDA INTEGRATED SERVICES LTD
+</h1>
+
+<div class="top-bar">
+
+<div class="search-container">
+
+   <form action="/certificates" method="GET" class="search-container">
+
+    <span class="search-icon">🔍</span>
+
+    <input
+        id="searchInput"
+        type="text"
+        name="search"
+        autocomplete="off"
+        value="<%= search || '' %>"
+        placeholder="Client, Equipment, Serial No..."
+    >
+
+    <button class="search-btn" type="submit">
+        Search
+    </button>
+
+    <div id="searchSuggestions"></div>
+
+</form>
+
+</div>
+    <a
+        href="/certificates/create"
+        class="create-btn"
+    >
+        ➕ Create
+    </a>
+
+</div>
+
+<section class="activities">
+
+    <div class="section-header">
+
+        <h2>Recent Activities</h2>
+
+        <a
+            href="/certificates/history"
+            class="view-more"
+        >
+            View More
+        </a>
+
+    </div>
+
+    <table>
+
+        <thead>
+
+            <tr>
+                <th>Client</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Action</th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            <% recentCertificates.forEach(cert => { %>
+
+                <tr>
+
+                    <td>
+                        <%= cert.data?.client || cert.data?.equipmentOwner || 'N/A' %>
+                    </td>
+
+                    <td>
+                        <%= cert.template %>
+                    </td>
+
+                    <td>
+                        <%= new Date(cert.createdAt).getTime() === new Date(cert.updatedAt).getTime()
+                            ? '🟢 New'
+                            : '🟡 Edited'
+                        %>
+                    </td>
+
+                    <td>
+                        <%= new Date(cert.createdAt).toLocaleDateString() %>
+                    </td>
+
+                    <td>
+
+                        <a
+                            href="/certificates/<%= cert._id %>/view"
+                            class="action-link"
+                        >
+                            View
+                        </a>
+
+                    </td>
+
+                </tr>
+
+            <% }) %>
+
+        </tbody>
+
+    </table>
+
+</section>
+

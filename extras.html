@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Calibration Certificate</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:"Times New Roman",serif;
+    background:#fff;
+    color:#000;
+}
+
+.page{
+    width:210mm;
+    min-height:297mm;
+    margin:auto;
+    padding:15mm;
+}
+
+h2{
+    text-align:center;
+    font-size:26px;
+    margin-bottom:12px;
+    text-transform:uppercase;
+    font-weight:bold;
+}
+
+.info{
+    width:100%;
+    border-collapse:collapse;
+    margin-bottom:10px;
+}
+
+.info td{
+    padding:4px 6px;
+    font-size:14px;
+}
+
+.label{
+    font-weight:bold;
+    white-space:nowrap;
+}
+
+.uut{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:8px;
+    margin-bottom:15px;
+}
+
+.uut th,
+.uut td{
+    border:1px solid #000;
+    padding:6px;
+    font-size:13px;
+}
+
+.uut th{
+    text-align:center;
+    font-weight:bold;
+    background:#f8f8f8;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="page">
+
+<h2>CALIBRATION CERTIFICATE</h2>
+
+<table class="info">
+<tr>
+<td class="label">CLIENT:</td>
+<td><%= data.client %></td>
+
+<td class="label">CERT NO:</td>
+<td><%= data.certificateNo %></td>
+</tr>
+</table>
+
+<table class="uut">
+
+<tr>
+<th colspan="4">
+UNIT UNDER TEST (UUT)
+</th>
+</tr>
+
+<tr>
+<td class="label">EQUIPMENT</td>
+<td><%= data.equipment %></td>
+
+<td class="label">SERVICE</td>
+<td><%= data.service %></td>
+</tr>
+
+<tr>
+<td class="label">MANUFACTURER</td>
+<td><%= data.manufacturer %></td>
+
+<td class="label">METHOD</td>
+<td><%= data.method %></td>
+</tr>
+
+<tr>
+<td class="label">RANGE</td>
+<td><%= data.range %></td>
+
+<td class="label">TRACEABILITY</td>
+<td><%= data.traceability %></td>
+</tr>
+
+<tr>
+<td class="label">SERIAL NO</td>
+<td><%= data.serialNo %></td>
+
+<td class="label">AMBIENT TEMPS</td>
+<td><%= data.ambientTemperature %></td>
+</tr>
+
+<tr>
+<td class="label">SCREEN SIZE</td>
+<td><%= data.screenSize %></td>
+
+<td class="label">TAG NO</td>
+<td><%= data.tagNo %></td>
+</tr>
+
+<tr>
+<td class="label">TEST DATE</td>
+<td><%= data.testDate %></td>
+
+<td class="label">TYPE</td>
+<td><%= data.type %></td>
+</tr>
+
+<tr>
+<td class="label">DUE DATE</td>
+<td colspan="3"><%= data.dueDate %></td>
+</tr>
+
+</table>
+
+<style>
+.section-title{
+    text-align:center;
+    font-size:16px;
+    font-weight:bold;
+    margin:12px 0 6px;
+    text-transform:uppercase;
+}
+
+.test-table{
+    width:100%;
+    border-collapse:collapse;
+    margin-bottom:10px;
+}
+
+.test-table th,
+.test-table td{
+    border:1px solid #000;
+    padding:6px;
+    font-size:13px;
+    height:28px;
+}
+
+.test-table th{
+    text-align:center;
+    font-weight:bold;
+}
+
+.test-table td{
+    text-align:center;
+}
+</style>
+
+<div class="section-title">
+    TEST DATA
+</div>
+
+<table class="test-table">
+
+    <thead>
+        <tr>
+            <th style="width:35%">
+                ACTUAL APPLIED (PSI)
+            </th>
+
+            <th style="width:35%">
+                INSTRUMENT UNDER TEST (PSI)
+            </th>
+
+            <th style="width:30%">
+                REMARK
+            </th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+    <% if(data.testData && data.testData.length){ %>
+
+        <% data.testData.forEach(row => { %>
+
+        <tr>
+            <td><%= row.actualApplied %></td>
+            <td><%= row.instrumentReading %></td>
+            <td><%= row.remark %></td>
+        </tr>
+
+        <% }) %>
+
+    <% } else { %>
+
+        <% for(let i=0;i<10;i++){ %>
+        <tr>
+            <td>&nbsp;</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <% } %>
+
+    <% } %>
+
+    </tbody>
+
+</table>

@@ -1,0 +1,44 @@
+/* ---------- App Layout ---------- */
+
+.app-layout{
+    display:flex;
+    min-height:100vh;
+    background:#f5f7fb;
+}
+
+.page-content{
+    flex:1;
+    overflow:auto;
+    padding:30px;
+}
+
+/* keep certificate centered */
+
+#certificate{
+    width:210mm;
+    margin:auto;
+    background:white;
+    box-shadow:0 5px 25px rgba(0,0,0,.12);
+}
+
+/* PDF should never show sidebar */
+
+@media print{
+
+.app-layout{
+    display:block;
+}
+
+.sidebar{
+    display:none !important;
+}
+
+.page-content{
+    padding:0;
+}
+
+#certificate{
+    box-shadow:none;
+}
+
+}

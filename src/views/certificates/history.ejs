@@ -1,0 +1,263 @@
+<h1 class="page-title">
+    Certificate History
+</h1>
+
+<form
+    class="history-filters"
+    method="GET"
+    action="/certificates/history"
+>
+
+    <div class="search-box">
+
+        <input
+            type="text"
+            name="search"
+            placeholder="Search..."
+            value="<%= search %>"
+        >
+
+        <button type="submit">
+            Search
+        </button>
+
+    </div>
+
+    <select name="template">
+
+        <option
+            value="all"
+            <%= template === 'all' ? 'selected' : '' %>>
+            All Templates
+        </option>
+
+        <option
+            value="NDT"
+            <%= template === 'NDT' ? 'selected' : '' %>>
+            NDT
+        </option>
+
+        <option
+            value="MPI-UT"
+            <%= template === 'MPI-UT' ? 'selected' : '' %>>
+            MPI / UT
+        </option>
+
+        <option
+            value="load-test"
+            <%= template === 'load-test' ? 'selected' : '' %>>
+            Load Test
+        </option>
+
+        <option
+            value="drill-pipe"
+            <%= template === 'drill-pipe' ? 'selected' : '' %>>
+            Drill Pipe
+        </option>
+
+        <option
+            value="calibration"
+            <%= template === 'calibration' ? 'selected' : '' %>>
+            Calibration
+        </option>
+
+    </select>
+
+    <select name="status">
+
+        <option
+            value="all"
+            <%= status === 'all' ? 'selected' : '' %>>
+            All Status
+        </option>
+
+        <option
+            value="new"
+            <%= status === 'new' ? 'selected' : '' %>>
+            New
+        </option>
+
+        <option
+            value="edited"
+            <%= status === 'edited' ? 'selected' : '' %>>
+            Edited
+        </option>
+
+    </select>
+
+    <input
+        type="date"
+        name="from"
+        value="<%= from %>"
+    >
+
+    <input
+        type="date"
+        name="to"
+        value="<%= to %>"
+    >
+
+    <button type="submit">
+        Apply Filters
+    </button>
+
+    <a
+        href="/certificates/history"
+        class="reset-btn"
+    >
+        Reset
+    </a>
+
+</form>
+
+<p class="history-count">
+    Showing
+    <strong><%= certificates.length %></strong>
+    certificate(s)
+</p>
+
+<table class="history-table">
+
+    <thead>
+
+        <tr>
+
+            <th>Client</th>
+
+            <th>Template</th>
+
+            <th>Certificate No.</th>
+
+            <th>Status</th>
+
+            <th>Date</th>
+
+            <th>Actions</th>
+
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+        <% if(certificates.length === 0){ %>
+
+            <tr>
+
+                <td colspan="6" class="empty">
+
+                    No certificates found.
+
+                </td>
+
+            </tr>
+
+        <% } %>
+
+        <% certificates.forEach(cert=>{ %>
+
+            <tr>
+
+                <td>
+
+                    <%= cert.data?.client ||
+                        cert.data?.equipmentOwner ||
+                        '-' %>
+
+                </td>
+
+                <td>
+
+                    <%= cert.template %>
+
+                </td>
+
+                <td>
+
+                    <%= cert.data?.certificateNo || '-' %>
+
+                </td>
+
+                <td>
+
+                    <% if(cert.status === 'edited'){ %>
+
+                        🟡 Edited
+
+                    <% } else { %>
+
+                        🟢 New
+
+                    <% } %>
+
+                </td>
+
+                <td>
+
+                    <%= new Date(cert.createdAt).toLocaleDateString() %>
+
+                </td>
+
+                <td class="actions">
+
+                    <a href="/certificates/<%= cert._id %>/view">
+                        👁
+                    </a>
+
+                    <a href="/certificates/<%= cert._id %>/edit">
+                        ✏
+                    </a>
+
+                    <form
+                        action="/certificates/<%= cert._id %>/delete"
+                        method="POST"
+                        style="display:inline"
+                    >
+
+                        <button
+                            onclick="return confirm('Delete this certificate?')"
+                        >
+                            🗑
+                        </button>
+
+                    </form>
+
+                </td>
+
+            </tr>
+
+        <% }) %>
+
+    </tbody>
+
+</table>
+
+<div class="pagination">
+
+    <% if(currentPage > 1){ %>
+
+        <a
+            href="?page=<%= currentPage-1 %>&search=<%= search %>&template=<%= template %>&status=<%= status %>&from=<%= from %>&to=<%= to %>"
+        >
+            ← Previous
+        </a>
+
+    <% } %>
+
+    <span>
+
+        Page <%= currentPage %> of <%= totalPages %>
+
+    </span>
+
+    <% if(currentPage < totalPages){ %>
+
+        <a
+            href="?page=<%= currentPage+1 %>&search=<%= search %>&template=<%= template %>&status=<%= status %>&from=<%= from %>&to=<%= to %>"
+        >
+            Next →
+        </a>
+
+    <% } %>
+
+</div>

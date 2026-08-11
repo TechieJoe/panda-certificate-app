@@ -1,0 +1,1619 @@
+<%
+const d = data || {};
+
+const drillRows =
+    d.tables?.find(
+        t => t.name === "drill-pipe-inspection"
+    )?.rows || [];
+
+const viewMode =
+typeof isView !== 'undefined' ? isView : false;
+
+%>
+
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    background:#fff;
+
+}
+
+
+body{
+
+    font-family:Arial,Helvetica,sans-serif;
+
+    background:#ececec;
+
+    padding:20px;
+
+}
+
+/* Scrollable area */
+
+.report-wrapper{
+
+    width:100%;
+
+    overflow-x:auto;
+
+    overflow-y:auto;
+
+    border:1px solid #777;
+
+    background:white;
+
+    padding:15px;
+
+}
+
+/* Actual report */
+
+.report{
+
+    width:1850px;
+
+    margin:auto;
+
+    padding:0 8mm 8mm 8mm;
+}
+
+/* Tables */
+
+table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+}
+
+th,
+td{
+
+    border:1px solid #000;
+
+    text-align:center;
+
+    vertical-align:middle;
+
+    padding:2px;
+
+    font-size:10px;
+
+}
+
+/* ===========================
+   INSPECTION TABLE
+=========================== */
+
+.drill-table{
+    width:100%;
+    border-collapse:collapse;
+    border:2px solid #000;
+    table-layout:fixed;
+}
+
+
+.drill-table th,
+.drill-table td{
+
+    border:1px solid #000;
+
+    text-align:center;
+
+    vertical-align:middle;
+
+    padding:2px;
+
+    font-size:10px;
+
+}
+
+.drill-table th{
+
+    font-weight:bold;
+
+}
+
+/* First Header Row */
+
+.drill-table thead tr:first-child th{
+
+    height:34px;
+
+    font-size:11px;
+
+    border-bottom:2px solid #000;
+
+}
+
+/* Second Header Row */
+
+.drill-table thead tr:nth-child(2) th{
+
+    height:28px;
+
+}
+
+/* Third Header Row */
+
+.drill-table thead tr:nth-child(3) th{
+
+    height:22px;
+
+    font-size:9px;
+
+}
+
+/* Data Rows */
+
+.drill-table tbody td{
+
+    height:24px;
+
+}
+
+/* Inputs */
+
+input{
+
+    width:100%;
+
+    border:none;
+
+    outline:none;
+
+    background:transparent;
+
+    text-align:center;
+
+    font-size:10px;
+
+}
+
+input:focus{
+
+    background:#fff7c2;
+
+}
+
+.section-title{
+
+    background:#fff;
+
+    font-size:12px;
+
+    letter-spacing:.5px;
+
+    border-top:2px solid #000 !important;
+
+    border-bottom:2px solid #000 !important;
+
+}
+
+.box-header{
+    border-left:4px solid #000 !important;
+}
+
+.pin-header{
+    border-left:4px solid #000 !important;
+}
+
+/* Header */
+
+.cert-header{
+    width:100%;
+    margin-bottom:8px;
+}
+
+.cert-header img{
+    display:block;
+    width:100%;
+    max-height:95px;
+}
+
+.title{
+
+    text-align:center;
+
+    font-size:22px;
+
+    font-weight:bold;
+
+    margin-bottom:12px;
+
+}
+
+.top-info{
+
+    margin-bottom:15px;
+
+}
+
+.top-info td{
+
+    text-align:left;
+
+    padding:5px;
+
+    height:32px;
+
+}
+
+.label{
+
+    font-weight:bold;
+
+}
+
+.group{
+
+    background:#f3f3f3;
+
+    font-size:11px;
+
+    font-weight:bold;
+
+}
+
+.subgroup{
+
+    background:#fafafa;
+
+    font-size:10px;
+
+    font-weight:bold;
+
+}
+
+.bottom-section{
+
+    display:flex;
+
+    align-items:flex-start;
+
+    justify-content:space-between;
+
+    gap:18px;
+
+    margin-top:15px;
+
+}
+
+.pipe-column{
+
+    width:48%;
+
+}
+
+.box-column{
+
+    width:20%;
+
+}
+
+.pin-column{
+
+    width:32%;
+
+}
+
+.counter-header{
+
+    font-size:9px;
+
+}
+
+.drill-table input{
+
+    width:100%;
+
+    height:100%;
+
+    border:none;
+
+    text-align:center;
+
+    font-size:10px;
+
+    padding:0;
+
+    background:transparent;
+
+}
+
+/* ==========================
+   SECTION SEPARATORS
+========================== */
+
+.pipe-divider{
+    border-left:4px solid #000 !important;
+}
+
+.box-divider{
+    border-left:4px solid #000 !important;
+}
+
+.pin-divider{
+    border-left:4px solid #000 !important;
+}
+
+/*================================================*/
+
+.bottom-section-table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    margin-top:5px;
+
+}
+
+.bottom-section-table>tbody>tr>td{
+
+    border:1px solid #000;
+
+    vertical-align:top;
+
+    padding:4px;
+
+}
+
+.pipe-section{
+
+    width:48%;
+
+}
+
+.box-section{
+
+    width:18%;
+
+}
+
+.pin-section{
+
+    width:34%;
+
+}
+
+/*================================================*/
+
+.pipe-summary{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+}
+
+.pipe-summary td{
+
+    border:1px solid #000;
+
+    height:24px;
+
+}
+
+.summary-label{
+
+    width:120px;
+
+    font-weight:bold;
+
+    padding-left:8px;
+
+}
+
+.pipe-summary input{
+
+    width:100%;
+
+    height:100%;
+
+    border:none;
+
+    padding-left:8px;
+
+}
+
+/*================================================*/
+
+.remark-table{
+
+    width:100%;
+
+    margin-top:6px;
+
+    border-collapse:collapse;
+
+}
+
+.remark-table th{
+
+    border:1px solid #000;
+
+    height:24px;
+
+}
+
+.remark-table td{
+
+    border:1px solid #000;
+
+}
+
+.remark-table textarea{
+
+    width:100%;
+
+    height:40px;
+
+    border:none;
+
+    resize:none;
+
+    padding:5px;
+
+    font-size:11px;
+
+}
+
+/*================================================*/
+
+.repair-table{
+
+    width:100%;
+
+    margin-top:8px;
+
+    border-collapse:collapse;
+
+}
+
+.repair-table td{
+
+    border:1px solid #000;
+
+    height:22px;
+
+}
+
+.repair-table th{
+
+    height:24px;
+
+    font-size:11px;
+
+}
+
+.repair-table td:first-child{
+
+    width:85%;
+
+    padding-left:8px;
+
+    font-size:11px;
+
+}
+
+.repair-table td:last-child{
+
+    width:15%;
+
+}
+
+.repair-table input{
+
+    width:100%;
+
+    height:100%;
+
+    border:none;
+
+    text-align:center;
+
+}
+
+/*================================================*/
+
+.box-classification{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+}
+
+.box-classification th,
+
+.box-classification td{
+
+    border:1px solid #000;
+
+    height:28px;
+
+}
+
+.box-classification td:first-child{
+
+    width:75%;
+
+    padding-left:8px;
+
+}
+
+.box-classification td:last-child{
+
+    width:25%;
+
+}
+
+.box-classification input{
+
+    width:100%;
+
+    height:100%;
+
+    border:none;
+
+    text-align:center;
+
+}
+
+/*================================================*/
+
+.legend-table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.legend-table th{
+    border:1px solid #000;
+    padding:4px;
+    font-size:11px;
+}
+
+.legend-table td{
+    border:1px solid #000;
+    vertical-align:top;
+    width:50%;
+    padding:4px 6px;
+}
+
+.legend-left{
+    border-right:1px solid #000;
+}
+
+.legend-left div,
+.legend-right div{
+    margin-bottom:4px;
+    font-size:10px;
+    line-height:1.3;
+}
+
+/* Add Row */
+
+#addRow{
+
+    margin-top:12px;
+
+    padding:8px 18px;
+
+    cursor:pointer;
+
+}
+
+/* ================================
+   DOWNLOAD PDF BUTTON
+================================ */
+
+.floating-toolbar{
+    position:fixed;
+    top:18px;
+    left:18px;
+    z-index:99999;
+}
+
+.toolbar-btn{
+    display:flex !important;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+
+    min-width:150px;
+    height:44px;
+
+    padding:0 18px;
+
+    border:none;
+    border-radius:10px;
+
+    background:#111827;
+    color:#fff;
+
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:13px;
+    font-weight:700;
+
+    cursor:pointer;
+
+    box-shadow:0 4px 12px rgba(0,0,0,.20);
+
+    transition:
+        background .2s ease,
+        transform .2s ease,
+        box-shadow .2s ease,
+        opacity .2s ease;
+}
+
+.toolbar-btn:hover{
+    background:#1f2937;
+    transform:translateY(-1px);
+    box-shadow:0 6px 16px rgba(0,0,0,.25);
+}
+
+.toolbar-btn:active{
+    transform:translateY(0);
+}
+
+.toolbar-btn:disabled{
+    cursor:not-allowed;
+    opacity:.65;
+}
+
+.download-icon{
+    display:inline-flex !important;
+    font-size:17px;
+    line-height:1;
+}
+
+.download-text{
+    display:inline-block !important;
+    white-space:nowrap;
+}
+
+
+.table-actions{
+    margin:15px 0;
+}
+
+.add-row-btn{
+    padding:8px 18px;
+    border:none;
+    border-radius:4px;
+    background:#28a745;
+    color:#fff;
+    font-size:14px;
+    cursor:pointer;
+}
+
+.add-row-btn:hover{
+    background:#218838;
+}
+
+.date-input{
+    width:100%;
+    border:none;
+    background:transparent;
+    font-size:10px;
+}
+
+.date-input::-webkit-calendar-picker-indicator{
+    cursor:pointer;
+    opacity:1;
+}
+
+/* Print */
+
+@media print{
+
+body{
+
+background:white;
+
+padding:0;
+
+}
+
+.report-wrapper{
+
+border:none;
+
+overflow:visible;
+
+padding:0;
+
+}
+
+.report{
+
+width:100%;
+
+}
+
+.drill-table tr{
+
+    page-break-inside:avoid;
+
+}
+
+}
+
+</style>
+
+    
+<body data-cert-type="DRILL-PIPE" data-is-view="<%= viewMode ? 'true' : 'false' %>">
+
+<div class="floating-toolbar pdf-hide">
+
+    <button
+        type="button"
+        class="toolbar-btn"
+        onclick="downloadPDF(event)"
+        title="Download PDF"
+    >
+        <span class="download-icon">⬇</span>
+        <span class="download-text">Download PDF</span>
+    </button>
+
+</div>
+
+<div id="certificate">
+
+<div id="certificate">
+
+<div class="report-wrapper">
+
+<div class="report">
+
+<div class="cert-header">
+    <img
+        id="letterhead"
+        src="<%= branding?.letterhead || '' %>">
+</div>
+
+<div class="title">
+    DRILL PIPE INSPECTION REPORT
+</div>
+
+<table class="top-info">
+
+<tr>
+
+<td style="width:25%;">
+
+<span class="label">CUSTOMER :</span>
+
+<input
+name="customer"
+value="<%= d.customer || '' %>">
+
+</td>
+
+<td style="width:20%;">
+
+<span class="label">LOCATION :</span>
+
+<input
+name="location"
+value="<%= d.location || '' %>">
+
+</td>
+
+<td style="width:15%;">
+
+<span class="label">RIG :</span>
+
+<input
+name="rig"
+value="<%= d.rig || '' %>">
+
+</td>
+
+<td style="width:20%;">
+
+<span class="label">REPORT NO :</span>
+
+<input
+name="reportNo"
+value="<%= d.reportNo || '' %>">
+
+</td>
+
+<td style="width:20%;">
+
+<span class="label">DATE :</span>
+
+<input
+    type="date"
+    name="date"
+    data-stamp-date
+    value="<%= d.date || '' %>"
+>
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<span class="label">SIZE :</span>
+
+<input
+name="size"
+value="<%= d.size || '' %>">
+
+</td>
+
+<td>
+
+<span class="label">GRADE :</span>
+
+<input
+name="grade"
+value="<%= d.grade || '' %>">
+
+</td>
+
+<td>
+
+<span class="label">WEIGHT :</span>
+
+<input
+name="weight"
+value="<%= d.weight || '' %>">
+
+</td>
+
+<td>
+
+<span class="label">NOM. WALL THICKNESS :</span>
+
+<input
+name="nominalWallThickness"
+value="<%= d.nominalWallThickness || '' %>">
+
+</td>
+
+<td>
+
+<span class="label">TOOL JOINT RANGE / COATED :</span>
+
+<input
+name="toolJointRangeCoated"
+value="<%= d.toolJointRangeCoated || '' %>">
+
+</td>
+
+</tr>
+
+</table>
+
+<table id="inspectionTable">
+
+<thead>
+
+<!-- ===================== LEVEL 1 ===================== -->
+
+<tr>
+
+<th rowspan="3" style="width:40px;">S/N</th>
+
+<th rowspan="3" style="width:70px;">ID NO</th>
+
+<th colspan="6" class="section-title pipe-header">PIPE BODY</th>
+
+
+<th colspan="10" class="section-title box-header">BOX TOOL JOINT</th>
+
+
+<th colspan="10" class="section-title pin-header">PIN TOOL JOINT</th>
+
+
+<th rowspan="3" class="pin-divider">FINAL<br>CLASS</th>
+
+<th rowspan="3">TALLY<br>LENGTH</th>
+
+<th rowspan="3">REMARK</th>
+
+</tr>
+
+<!-- ===================== LEVEL 2 ===================== -->
+
+<tr>
+
+<!-- PIPE BODY -->
+
+<th colspan="2">CORROSION</th>
+
+<th rowspan="2">INT/COAT</th>
+
+<th rowspan="2">MIN WALL<br>THICK<br>(INCHES)</th>
+
+<th rowspan="2">BENT</th>
+
+<th rowspan="2">EMI/UT</th>
+
+<!-- BOX TOOL JOINT -->
+
+<th rowspan="2" class="pipe-divider">OD</th>
+
+<th rowspan="2">HB OD<br>COND</th>
+
+<th rowspan="2">BEVEL<br>DIA</th>
+
+<th colspan="2">COUNTERBORE</th>
+
+<th rowspan="2">BOX/L</th>
+
+<th rowspan="2">LEAD<br>GAUGE</th>
+
+<th rowspan="2">TONG<br>SPACE</th>
+
+<th rowspan="2">CONDT</th>
+
+<th rowspan="2">MPI/UT</th>
+
+<!-- PIN TOOL JOINT -->
+
+<th rowspan="2" class="box-divider">ID</th>
+
+<th rowspan="2">OD</th>
+
+<th rowspan="2">BEVEL<br>DIA</th>
+
+<th rowspan="2">CY/DIA</th>
+
+<th rowspan="2">PIN<br>NOSE</th>
+
+<th rowspan="2">LEAD<br>GAUGE</th>
+
+<th rowspan="2">PIN<br>LENGTH</th>
+
+<th rowspan="2">TONG<br>SPACE</th>
+
+<th rowspan="2">CONDT</th>
+
+<th rowspan="2">MPI/UT</th>
+
+
+</tr>
+
+<!-- ===================== LEVEL 3 ===================== -->
+
+<tr>
+
+<!-- PIPE BODY -->
+
+<th>INT</th>
+
+<th>EXT</th>
+
+<!-- BOX -->
+
+<th>WALL<br>THICK</th>
+
+<th>DIA</th>
+
+</tr>
+
+</thead>
+
+<tbody
+    data-table-name="drill-pipe-inspection"
+    data-add-row="drill-pipe-inspection"
+>
+
+<%
+const fields = [
+    "idNo",
+
+    "corrosionInt",
+    "corrosionExt",
+    "intCoat",
+    "minWallThickness",
+    "bent",
+    "emiUt",
+
+    "boxOd",
+    "hbOdCond",
+    "boxBevelDia",
+    "counterboreWallThickness",
+    "counterboreDia",
+    "boxLength",
+    "boxLeadGauge",
+    "boxTongSpace",
+    "boxCondition",
+    "boxMpiUt",
+
+    "pinId",
+    "pinOd",
+    "pinBevelDia",
+    "pinCyDia",
+    "pinNose",
+    "pinLeadGauge",
+    "pinLength",
+    "pinTongSpace",
+    "pinCondition",
+    "pinMpiUt",
+
+    "finalClass",
+    "tallyLength",
+    "remark"
+];
+%>
+
+<% if (drillRows.length) { %>
+
+    <% drillRows.forEach((row,index)=> { %>
+
+    <tr class="inspection-row">
+
+        <td class="sn"><%= index + 1 %></td>
+
+      <% fields.forEach(function(field, index){ %>
+
+    <td class="
+        <%= index === 6 ? 'pipe-divider' : '' %>
+        <%= index === 16 ? 'box-divider' : '' %>
+        <%= index === 26 ? 'pin-divider' : '' %>
+    ">
+        <input
+            type="text"
+            name="<%= field %>"
+            value="<%= row?.[field] || '' %>">
+    </td>
+
+<% }) %>
+
+        <% if(!isPdf){ %>
+        <td class="pdf-hide">
+            <button
+                type="button"
+                class="delete-btn"
+                onclick="deleteRow(this)">
+                ×
+            </button>
+        </td>
+        <% } %>
+
+    </tr>
+
+    <% }) %>
+
+<% } else { %>
+
+<tr class="inspection-row">
+
+    <td class="sn">1</td>
+
+   <% fields.forEach(function(field, index){ %>
+
+    <td class="
+        <%= index === 7 ? 'pipe-divider' : '' %>
+        <%= index === 17 ? 'box-divider' : '' %>
+        <%= index === 27 ? 'pin-divider' : '' %>
+    ">
+        <input
+            type="text"
+            name="<%= field %>">
+    </td>
+
+<% }) %>
+
+    <% if(!isPdf){ %>
+    <td class="pdf-hide">
+        <button
+            type="button"
+            class="delete-btn"
+            onclick="deleteRow(this)">
+            ×
+        </button>
+    </td>
+    <% } %>
+
+</tr>
+
+<% } %>
+
+</tbody>
+
+<% if(!isPdf){ %>
+
+<div class="table-actions pdf-hide">
+
+    <button
+        type="button"
+        class="add-row-btn"
+        onclick="addRow('drill-pipe-inspection')">
+
+        + Add Row
+
+    </button>
+
+</div>
+
+<% } %>
+
+</table>
+<!-- ====================== BOTTOM SECTION ====================== -->
+
+<table class="bottom-section-table">
+
+<tr>
+
+    <!-- ===================================================== -->
+    <!-- PIPE BODY -->
+    <!-- ===================================================== -->
+
+    <td class="pipe-section">
+
+        <table class="pipe-summary">
+
+            <tr>
+
+                <td class="summary-label">
+
+                    MAX REQD.
+
+                </td>
+
+                <td>
+
+                    <input
+                        type="text"
+                        name="maxRequired"
+                        value="<%= d.maxRequired || '' %>">
+
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <td class="summary-label">
+
+                    MIN REQD.
+
+                </td>
+
+                <td>
+
+                    <input
+                        type="text"
+                        name="minRequired"
+                        value="<%= d.minRequired || '' %>">
+
+                </td>
+
+            </tr>
+
+        </table>
+
+       <table class="repair-table">
+
+<tr>
+
+    <th colspan="2">
+
+        REMARK
+
+    </th>
+
+</tr>
+
+            <tr>
+
+                <td>
+
+                    JOINT WITH PIN FOR REPAIR
+
+                </td>
+
+                <td>
+
+                    <input
+                        name="classification.pinRepair"
+                        value="<%= d.classification?.pinRepair || '' %>">
+
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <td>
+
+                    JOINT WITH BOX FOR REPAIR
+
+                </td>
+
+                <td>
+
+                    <input
+                        name="classification.boxRepair"
+                        value="<%= d.classification?.boxRepair || '' %>">
+
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <td>
+
+                    JOINT WITH PIN AND BOX FOR REPAIR
+
+                </td>
+
+                <td>
+
+                    <input
+                        name="classification.pinBoxRepair"
+                        value="<%= d.classification?.pinBoxRepair || '' %>">
+
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <td>
+
+                    PIN AND BOX REFACED AND REBEVELLED
+
+                </td>
+
+                <td>
+
+                    <input
+                        name="classification.pinBoxRefaced"
+                        value="<%= d.classification?.pinBoxRefaced || '' %>">
+
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <td>
+
+                    BOX REFACED AND REBEVELLED
+
+                </td>
+
+                <td>
+
+                    <input
+                        name="classification.boxRefaced"
+                        value="<%= d.classification?.boxRefaced || '' %>">
+
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <td>
+
+                    BENT PIPES
+
+                </td>
+
+                <td>
+
+                    <input
+                        name="classification.bentPipes"
+                        value="<%= d.classification?.bentPipes || '' %>">
+
+                </td>
+
+            </tr>
+
+        </table>
+
+    </td>
+
+    <!-- ===================================================== -->
+    <!-- BOX TOOL JOINT -->
+    <!-- ===================================================== -->
+
+    <td class="box-section">
+
+        <table class="box-classification">
+
+            <tr>
+
+                <th colspan="2">
+
+                    CLASSIFICATION
+
+                </th>
+
+            </tr>
+
+            <tr>
+
+                <td>PREMIUM</td>
+
+                <td>
+
+                    <input
+                        name="boxClassification.premium"
+                        value="<%= d.boxClassification?.premium || '' %>">
+
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <td>CLASS 2</td>
+
+                <td>
+
+                    <input
+                        name="boxClassification.class2"
+                        value="<%= d.boxClassification?.class2 || '' %>">
+
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <td>SCRAP</td>
+
+                <td>
+
+                    <input
+                        name="boxClassification.scrap"
+                        value="<%= d.boxClassification?.scrap || '' %>">
+
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <td>TOTAL</td>
+
+                <td>
+
+                    <input
+                        name="boxClassification.total"
+                        value="<%= d.boxClassification?.total || '' %>">
+
+                </td>
+
+            </tr>
+
+        </table>
+
+    </td>
+
+    <!-- ===================================================== -->
+    <!-- PIN TOOL JOINT -->
+    <!-- ===================================================== -->
+
+    <td class="pin-section">
+
+      <table class="legend-table">
+    <tr>
+        <th colspan="2">ABBREVIATIONS</th>
+    </tr>
+
+    <tr>
+        <td class="legend-left">
+
+            <div>SD - SHOULDER DAMAGE</div>
+            <div>TD - THREAD DAMAGE</div>
+            <div>OT - OVAL THREAD</div>
+            <div>PS - PRESSURE SEAL</div>
+            <div>GT - GOUGE</div>
+            <div>WO - WASH OUT</div>
+            <div>CRK - CRACK</div>
+            <div>STJ - SHORT TOOL JOINT</div>
+            <div>HBD - HARD BAND DAMAGE</div>
+
+        </td>
+
+        <td class="legend-right">
+
+            <div>RF - REFACED</div>
+            <div>ACC - ACCEPT</div>
+            <div>NA - NOT APPLICABLE</div>
+            <div>W - WORN</div>
+
+        </td>
+    </tr>
+</table>
+    </td>
+
+</tr>
+
+</table>
+
+
+</div>
+
+<!-- ===================================== -->
+<!-- FOOTER -->
+<!-- ===================================== -->
+
+<div class="footer">
+
+<div
+<div
+style="
+margin-top:25px;
+display:flex;
+justify-content:space-between;
+align-items:flex-end;
+gap:20px;
+"
+>
+<!-- LEFT -->
+
+<div style="width:28%;">
+
+<div
+style="
+font-size:13px;
+font-weight:bold;
+margin-bottom:5px;
+"
+>
+
+TESTED AND INSPECTED BY
+
+
+</div>
+
+<img
+id="inspectorSignature"
+src="<%= branding?.signature || '' %>"
+style="
+width:140px;
+display:block;
+"
+>
+
+<div
+style="
+font-weight:bold;
+font-size:13px;
+"
+>
+
+ADAMS IWEZOR
+
+</div>
+
+<div
+style="
+font-size:12px;
+"
+>
+
+ASNT LEVEL II UT, PT & MT
+
+</div>
+
+</div>
+
+<!-- CENTER -->
+
+<div
+style="
+width:40%;
+text-align:center;
+"
+>
+
+<div
+style="
+position:relative;
+display:inline-block;
+width:100%;
+max-width:320px;
+"
+>
+
+<img
+id="stamp"
+src="<%= branding?.stamp || '' %>"
+style="
+width:100%;
+max-height:90px;
+"
+>
+
+<div
+style="
+position:absolute;
+bottom:12px;
+left:20px;
+font-size:12px;
+font-weight:bold;
+color:skyblue;
+"
+>
+
+DATE :
+
+<span id="stampDate">
+<%=
+d.date
+? new Date(d.date).toLocaleDateString(
+    'en-GB',
+    {
+        day:'2-digit',
+        month:'2-digit',
+        year:'2-digit'
+    }
+)
+: ''
+%>
+</span>
+</span>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- RIGHT -->
+
+<div
+style="
+width:28%;
+display:flex;
+justify-content:flex-end;
+gap:6px;
+"
+>
+
+<img
+id="asnt"
+src="<%= branding?.asnt || '' %>"
+style="height:40px;"
+>
+
+<img
+id="leea"
+src="<%= branding?.leea || '' %>"
+style="height:40px;"
+>
+
+<img
+id="awrf"
+src="<%= branding?.awrf || '' %>"
+style="height:40px;"
+>
+
+</div>
+
+</div>
+
+</div>
+
+
+</div> <!-- END CERTIFICATE -->
+
+
+
+<script src="/js/certificate.js"></script>
+
+
+</body>
+

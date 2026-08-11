@@ -1,0 +1,40 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= typeof title !== 'undefined' ? title : 'Panda Integrated Services Ltd' %></title>
+
+<link
+    rel="stylesheet"
+    href="/css/dashboard.css"
+>
+
+<% if (typeof css !== 'undefined' && css) { %>
+<link
+    rel="stylesheet"
+    href="/css/<%= css %>.css"
+>
+<% } %>
+
+</head>
+
+<body>
+
+<div class="layout">
+
+    <%- include('../dashboard/partials/sidebar') %>
+
+    <main class="content">
+        <%- body %>
+    </main>
+
+</div>
+
+<script src="/js/sidebar.js"></script>
+<script src="/js/search.js"></script>
+
+
+</body>
+</html>
+

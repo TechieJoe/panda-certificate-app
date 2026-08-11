@@ -1,0 +1,42 @@
+<h1 class="company-name">
+    Certificate Details
+</h1>
+
+<div class="activities">
+
+    <table>
+
+        <tr>
+            <th>Client</th>
+            <td><%= certificate.data?.equipmentOwner %></td>
+        </tr>
+
+        <tr>
+            <th>Type</th>
+            <td><%= certificate.template %></td>
+        </tr>
+
+        <tr>
+            <th>Created</th>
+            <td><%= new Date(certificate.createdAt).toLocaleString() %></td>
+        </tr>
+
+    </table>
+
+    <br>
+
+    <a
+        href="/certificates/<%= certificate._id %>/edit"
+        class="create-btn"
+    >
+        Edit
+    </a>
+
+    <a
+        href="/certificates/<%= certificate._id %>/pdf"
+        class="create-btn"
+    >
+        Download PDF
+    </a>
+
+</div>
