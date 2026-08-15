@@ -19,7 +19,7 @@ import { join } from 'path';
             'MONGODB_URI environment variable is not set. Please add it to your .env or environment variables.'
           );
         }
-        return {
+        return { 
           uri,
         } as any;
       },

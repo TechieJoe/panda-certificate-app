@@ -21,13 +21,13 @@ async function bootstrap() {
   app.setViewEngine('ejs');
 
   app.use(expressLayouts);
-
+    
   app.set('layout', 'layout/main');
 
   app.useStaticAssets(
-    join(process.cwd(), 'src', 'public'),
+    join(process.cwd(), 'src', 'public'), 
   );
-
+                            
   app.enableCors({
     origin: true,
   });
