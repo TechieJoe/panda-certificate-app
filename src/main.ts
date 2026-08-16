@@ -9,18 +9,20 @@ async function bootstrap() {
   const app =
     await NestFactory.create<NestExpressApplication>(AppModule);
 
-  app.setBaseViewsDir(join(process.cwd(), 'src', 'views'));
+  app.setBaseViewsDir(
+    join(process.cwd(), 'src', 'views'),
+  );
 
   app.setViewEngine('ejs');
 
   app.use(expressLayouts);
-    
+
   app.set('layout', 'layout/main');
 
   app.useStaticAssets(
-    join(process.cwd(), 'src', 'public'), 
+    join(process.cwd(), 'src', 'public'),
   );
-                            
+
   app.enableCors({
     origin: true,
   });
@@ -32,7 +34,12 @@ async function bootstrap() {
     }),
   );
 
- await app.listen(port, '0.0.0.0');
+  // Railway provides PORT automatically
+  const port = process.env.PORT || 3000;
+
+  await app.listen(port, '0.0.0.0');
+
+  console.log(`🚀 Application running on port ${port}`);
 }
 
 bootstrap();
