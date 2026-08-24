@@ -1,27 +1,49 @@
-
-
 <!DOCTYPE html>
 <html>
 <head>
-    <title><%= typeof title !== 'undefined' ? title : 'Panda Integrated Services Ltd' %></title>
 
-<link
-    rel="stylesheet"
-    href="/css/dashboard.css"
->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<% if (typeof css !== 'undefined' && css) { %>
-<link
-    rel="stylesheet"
-    href="/css/<%= css %>.css"
->
-<% } %>
+    <title>
+        <%= typeof title !== 'undefined'
+            ? title
+            : 'Panda Integrated Services Ltd'
+        %>
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="/css/dashboard.css"
+    >
+
+    <% if (typeof css !== 'undefined' && css) { %>
+        <link
+            rel="stylesheet"
+            href="/css/<%= css %>.css"
+        >
+    <% } %>
 
 </head>
 
 <body>
 
 <div class="layout">
+
+    <!-- MOBILE MENU BUTTON -->
+    <button
+        class="mobile-menu-btn"
+        onclick="toggleSidebar()"
+        type="button"
+    >
+        ☰
+    </button>
+
+    <!-- MOBILE OVERLAY -->
+    <div
+        class="sidebar-overlay"
+        id="sidebarOverlay"
+        onclick="closeSidebar()"
+    ></div>
 
     <%- include('../dashboard/partials/sidebar') %>
 
@@ -34,7 +56,5 @@
 <script src="/js/sidebar.js"></script>
 <script src="/js/search.js"></script>
 
-
 </body>
 </html>
-

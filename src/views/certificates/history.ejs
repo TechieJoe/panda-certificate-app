@@ -2,113 +2,39 @@
     Certificate History
 </h1>
 
-<form
-    class="history-filters"
-    method="GET"
-    action="/certificates/history"
->
 
-    <div class="search-box">
+<!-- SEARCH BAR -->
+<div class="top-bar">
+
+    <form
+        action="/certificates/history"
+        method="GET"
+        class="search-container"
+    >
+
+        <span class="search-icon">🔍</span>
 
         <input
+            id="searchInput"
             type="text"
             name="search"
-            placeholder="Search..."
-            value="<%= search %>"
+            autocomplete="on"
+            value="<%= search || '' %>"
+            placeholder="Client, Equipment, Serial No..."
         >
 
-        <button type="submit">
+        <button
+            class="search-btn"
+            type="submit"
+        >
             Search
         </button>
 
-    </div>
+        <div id="searchSuggestions"></div>
 
-    <select name="template">
+    </form>
 
-        <option
-            value="all"
-            <%= template === 'all' ? 'selected' : '' %>>
-            All Templates
-        </option>
-
-        <option
-            value="NDT"
-            <%= template === 'NDT' ? 'selected' : '' %>>
-            NDT
-        </option>
-
-        <option
-            value="MPI-UT"
-            <%= template === 'MPI-UT' ? 'selected' : '' %>>
-            MPI / UT
-        </option>
-
-        <option
-            value="load-test"
-            <%= template === 'load-test' ? 'selected' : '' %>>
-            Load Test
-        </option>
-
-        <option
-            value="drill-pipe"
-            <%= template === 'drill-pipe' ? 'selected' : '' %>>
-            Drill Pipe
-        </option>
-
-        <option
-            value="calibration"
-            <%= template === 'calibration' ? 'selected' : '' %>>
-            Calibration
-        </option>
-
-    </select>
-
-    <select name="status">
-
-        <option
-            value="all"
-            <%= status === 'all' ? 'selected' : '' %>>
-            All Status
-        </option>
-
-        <option
-            value="new"
-            <%= status === 'new' ? 'selected' : '' %>>
-            New
-        </option>
-
-        <option
-            value="edited"
-            <%= status === 'edited' ? 'selected' : '' %>>
-            Edited
-        </option>
-
-    </select>
-
-    <input
-        type="date"
-        name="from"
-        value="<%= from %>"
-    >
-
-    <input
-        type="date"
-        name="to"
-        value="<%= to %>"
-    >
-
-    <button type="submit">
-        Apply Filters
-    </button>
-
-    <a
-        href="/certificates/history"
-        class="reset-btn"
-    >
-        Reset
-    </a>
-
-</form>
+</div>
 
 <p class="history-count">
     Showing
