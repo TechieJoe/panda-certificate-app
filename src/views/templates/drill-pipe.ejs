@@ -743,7 +743,14 @@ width:100%;
     page-break-inside:avoid;
 
 }
+.no-print {
+        display: none !important;
+    }
+    
+}
 
+.no-print {
+    display: block;
 }
 
 </style>
@@ -755,7 +762,7 @@ width:100%;
 
     <button
         type="button"
-        class="toolbar-btn"
+        class="toolbar-btn no-print"
         onclick="downloadPDF(event)"
         title="Download PDF"
     >

@@ -262,54 +262,40 @@ body[data-cert-type="calibration"]{
 
 }
 
-.footer-center{
-
-    width:40%;
-
-    display:flex;
-
-    justify-content:center;
-
+.footer-center {
+    width: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
 }
 
-.stamp-wrapper{
-
-    position:relative;
-
-    display:inline-block;
-
+.stamp-wrapper {
+    position: relative;
+    display: block;
+    width: 300px;
+    margin: 0 auto;
 }
 
-.company-block{
-
-    width:170px;
-
-    height:auto;
-
+.company-block {
+    width: 300px;
+    height: auto;
+    display: block;
+}
+ 
+.stamp-overlay {
+    position: absolute;
+    left: -180px;
+    right: 0;
+    bottom: 18px;
+    text-align: center ;
 }
 
-.stamp-overlay{
-
-    position:absolute;
-
-    left:0;
-
-    right:0;
-
-    bottom:15px;
-
-    text-align:center;
-
-}
-
-.stamp-date{
-
-    font-size:12px;
-
-    font-weight:bold;
-
-    color:#3f9cff;
-
+.stamp-date {
+    font-size: 12px;
+    font-weight: bold;
+    color: #3f9cff;
+    white-space: nowrap;
 }
 
 .footer-right{
