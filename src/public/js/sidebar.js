@@ -1,38 +1,12 @@
-function toggleCreateMenu() {
-
-    const menu =
-        document.getElementById('createMenu');
-
-    const arrow =
-        document.getElementById('arrow');
-
-    if (!menu || !arrow) return;
-
-    menu.classList.toggle('show');
-
-    arrow.textContent =
-        menu.classList.contains('show')
-            ? '▲'
-            : '▼';
-}
-
-
-/* =====================================================
-   SIDEBAR
-===================================================== */
-
 function toggleSidebar() {
 
-    const sidebar =
-        document.getElementById('sidebar');
-
-    const overlay =
-        document.getElementById('sidebarOverlay');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
 
     if (!sidebar) return;
 
 
-    /* MOBILE */
+    /* MOBILE / TABLET */
 
     if (window.innerWidth <= 768) {
 
@@ -55,17 +29,10 @@ function toggleSidebar() {
 }
 
 
-/* =====================================================
-   CLOSE MOBILE SIDEBAR
-===================================================== */
+function closeMobileSidebar() {
 
-function closeSidebar() {
-
-    const sidebar =
-        document.getElementById('sidebar');
-
-    const overlay =
-        document.getElementById('sidebarOverlay');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
 
     if (!sidebar) return;
 
@@ -77,26 +44,20 @@ function closeSidebar() {
 }
 
 
-/* =====================================================
-   CLOSE SIDEBAR WHEN A LINK IS CLICKED ON MOBILE
-===================================================== */
+/* CLOSE MOBILE MENU WHEN A LINK IS CLICKED */
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', () => {
 
-    const sidebar =
-        document.getElementById('sidebar');
+    const sidebar = document.getElementById('sidebar');
 
     if (!sidebar) return;
 
-    const links =
-        sidebar.querySelectorAll('nav a');
+    sidebar.querySelectorAll('nav a').forEach(link => {
 
-    links.forEach(link => {
-
-        link.addEventListener('click', function () {
+        link.addEventListener('click', () => {
 
             if (window.innerWidth <= 768) {
-                closeSidebar();
+                closeMobileSidebar();
             }
 
         });
@@ -106,19 +67,15 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
-/* =====================================================
-   HANDLE SCREEN RESIZE
-===================================================== */
+/* HANDLE SCREEN RESIZE */
 
-window.addEventListener('resize', function () {
+window.addEventListener('resize', () => {
 
-    const sidebar =
-        document.getElementById('sidebar');
-
-    const overlay =
-        document.getElementById('sidebarOverlay');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
 
     if (!sidebar) return;
+
 
     if (window.innerWidth > 768) {
 

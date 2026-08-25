@@ -2,25 +2,22 @@
 <html>
 <head>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>
         <%= typeof title !== 'undefined'
             ? title
-            : 'Panda Integrated Services Ltd'
-        %>
+            : 'Panda Integrated Services Ltd' %>
     </title>
 
-    <link
-        rel="stylesheet"
-        href="/css/dashboard.css"
-    >
+    <link rel="stylesheet" href="/css/layout.css">
+    <link rel="stylesheet" href="/css/sidebar.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="/css/certificates.css">
+    <link rel="stylesheet" href="/css/responsive.css">
+    <link rel="stylesheet" href="/css/create.css">
+
 
     <% if (typeof css !== 'undefined' && css) { %>
-        <link
-            rel="stylesheet"
-            href="/css/<%= css %>.css"
-        >
+        <link rel="stylesheet" href="/css/<%= css %>.css">
     <% } %>
 
 </head>
@@ -28,22 +25,6 @@
 <body>
 
 <div class="layout">
-
-    <!-- MOBILE MENU BUTTON -->
-    <button
-        class="mobile-menu-btn"
-        onclick="toggleSidebar()"
-        type="button"
-    >
-        ☰
-    </button>
-
-    <!-- MOBILE OVERLAY -->
-    <div
-        class="sidebar-overlay"
-        id="sidebarOverlay"
-        onclick="closeSidebar()"
-    ></div>
 
     <%- include('../dashboard/partials/sidebar') %>
 

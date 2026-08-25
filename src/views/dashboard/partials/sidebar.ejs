@@ -1,14 +1,37 @@
+<!-- MOBILE MENU BUTTON -->
+<button
+    class="mobile-menu-btn"
+    onclick="toggleSidebar()"
+    aria-label="Open menu"
+    type="button"
+>
+    ☰
+</button>
+
+<!-- MOBILE OVERLAY -->
+<div
+    class="sidebar-overlay"
+    id="sidebarOverlay"
+    onclick="closeMobileSidebar()"
+></div>
+
+
+<!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
 
     <div class="sidebar-top">
 
-       <button
-    class="toggle-btn"
-    onclick="closeMobileSidebar()"
-    title="Close Sidebar"
->
-    ☰
-</button>
+        <!-- DESKTOP COLLAPSE BUTTON -->
+        <button
+            class="toggle-btn"
+            onclick="toggleSidebar()"
+            title="Toggle Sidebar"
+            aria-label="Toggle sidebar"
+            type="button"
+        >
+            ☰
+        </button>
+
         <div class="logo">
             <h2>PANDA</h2>
             <span>Integrated Services Ltd</span>
@@ -16,36 +39,46 @@
 
     </div>
 
+
     <nav>
 
+        <!-- DASHBOARD -->
         <a href="/certificates">
             <span class="icon">🏠</span>
             <span class="text">Dashboard</span>
         </a>
 
+
+        <!-- SECTION TITLE -->
         <div class="menu-title text">
             CERTIFICATES
         </div>
 
-      
+
+        <!-- HISTORY -->
         <a href="/certificates/history">
             <span class="icon">🕒</span>
             <span class="text">History</span>
         </a>
 
+
+        <!-- CREATE CERTIFICATE -->
         <a href="/certificates/create">
-            <span class="icon">🕒</span>
+            <span class="icon">➕</span>
             <span class="text">Create Certificate</span>
         </a>
 
 
+        <!-- REPORTS -->
         <a href="#">
             <span class="icon">📊</span>
             <span class="text">Reports</span>
         </a>
 
+
+        <!-- SETTINGS -->
         <a href="#">
-            <span class="icon">⚙</span>
+            <span class="icon">⚙️</span>
             <span class="text">Settings</span>
         </a>
 

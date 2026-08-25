@@ -1,0 +1,711 @@
+/* =========================================================
+   RESPONSIVE.CSS
+   Phone → Tablet → Laptop → Desktop → Large Screens
+========================================================= */
+
+
+/* =========================================================
+   1. LARGE DESKTOP / ULTRAWIDE
+   1600px+
+========================================================= */
+
+@media (min-width: 1600px) {
+
+    .content {
+        padding: 40px 50px;
+    }
+
+    .company-name {
+        font-size: 32px;
+    }
+
+    .top-bar {
+        gap: 30px;
+    }
+
+    .activities {
+        padding: 25px;
+    }
+
+    .certificate-grid {
+        grid-template-columns:
+            repeat(auto-fill, minmax(280px, 1fr));
+
+        gap: 30px;
+    }
+
+}
+
+
+/* =========================================================
+   2. NORMAL DESKTOP
+   1200px – 1599px
+========================================================= */
+
+@media (min-width: 1200px) and (max-width: 1599px) {
+
+    .content {
+        padding: 30px;
+    }
+
+    .certificate-grid {
+        grid-template-columns:
+            repeat(auto-fill, minmax(250px, 1fr));
+    }
+
+}
+
+
+/* =========================================================
+   3. SMALL LAPTOP
+   992px – 1199px
+========================================================= */
+
+@media (min-width: 992px) and (max-width: 1199px) {
+
+    .sidebar {
+        width: 230px;
+        min-width: 230px;
+    }
+
+    .sidebar.collapsed {
+        width: 70px;
+        min-width: 70px;
+    }
+
+    .content {
+        padding: 25px;
+    }
+
+    .company-name {
+        font-size: 27px;
+    }
+
+    .top-bar {
+        gap: 15px;
+    }
+
+    .search-container input {
+        width: 65%;
+    }
+
+    #searchSuggestions {
+        width: 65%;
+    }
+
+    .certificate-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 20px;
+    }
+
+}
+
+
+/* =========================================================
+   4. TABLET LANDSCAPE
+   769px – 991px
+========================================================= */
+
+@media (min-width: 769px) and (max-width: 991px) {
+
+    .sidebar {
+        width: 220px;
+        min-width: 220px;
+    }
+
+    .sidebar.collapsed {
+        width: 70px;
+        min-width: 70px;
+    }
+
+    .content {
+        padding: 25px 20px;
+    }
+
+    .company-name {
+        font-size: 25px;
+    }
+
+    .top-bar {
+        gap: 12px;
+    }
+
+    .search-container input {
+        width: 60%;
+    }
+
+    #searchSuggestions {
+        width: 60%;
+    }
+
+    .create-btn {
+        padding: 11px 15px;
+    }
+
+    .activities {
+        padding: 18px;
+    }
+
+    .certificate-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 18px;
+    }
+
+}
+
+
+/* =========================================================
+   5. MOBILE / TABLET PORTRAIT
+   481px – 768px
+========================================================= */
+
+@media (max-width: 768px) {
+
+    /* -----------------------------------------------------
+       GLOBAL LAYOUT
+    ----------------------------------------------------- */
+
+    html,
+    body {
+        width: 100%;
+        min-width: 0;
+        overflow-x: hidden;
+    }
+
+    .layout {
+        display: block;
+        width: 100%;
+        min-height: 100vh;
+    }
+
+    .content {
+        width: 100%;
+        min-width: 0;
+
+        padding:
+            80px
+            20px
+            30px;
+    }
+
+
+    /* -----------------------------------------------------
+       SIDEBAR
+    ----------------------------------------------------- */
+
+    .sidebar {
+        position: fixed;
+
+        top: 0;
+        left: 0;
+
+        width: 280px !important;
+        min-width: 280px !important;
+
+        height: 100dvh;
+
+        transform: translateX(-100%);
+
+        transition:
+            transform .3s ease;
+
+        z-index: 2000;
+
+        box-shadow:
+            5px 0 30px rgba(0,0,0,.25);
+    }
+
+    .sidebar.mobile-open {
+        transform: translateX(0);
+    }
+
+    /*
+       Desktop collapse must not interfere
+       with mobile.
+    */
+
+    .sidebar.collapsed {
+        width: 280px !important;
+        min-width: 280px !important;
+
+        transform: translateX(-100%);
+    }
+
+    .sidebar.collapsed.mobile-open {
+        transform: translateX(0);
+    }
+
+
+    /* -----------------------------------------------------
+       MOBILE MENU BUTTON
+    ----------------------------------------------------- */
+
+    .mobile-menu-btn {
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        position: fixed;
+
+        top: 15px;
+        left: 15px;
+
+        width: 48px;
+        height: 48px;
+
+        border: none;
+        border-radius: 12px;
+
+        background: #0f172a;
+        color: #fff;
+
+        font-size: 24px;
+
+        z-index: 1900;
+
+        box-shadow:
+            0 5px 15px rgba(0,0,0,.20);
+    }
+
+
+    /* -----------------------------------------------------
+       OVERLAY
+    ----------------------------------------------------- */
+
+    .sidebar-overlay {
+        display: block;
+
+        position: fixed;
+
+        inset: 0;
+
+        background:
+            rgba(0,0,0,.45);
+
+        opacity: 0;
+        visibility: hidden;
+
+        transition:
+            opacity .3s ease,
+            visibility .3s ease;
+
+        z-index: 1999;
+    }
+
+    .sidebar-overlay.show {
+        opacity: 1;
+        visibility: visible;
+    }
+
+
+    /* -----------------------------------------------------
+       COMPANY NAME
+    ----------------------------------------------------- */
+
+    .company-name {
+        font-size: clamp(24px, 5vw, 32px);
+
+        line-height: 1.2;
+
+        margin:
+            0
+            0
+            25px;
+
+        padding-left: 0;
+
+        max-width: 700px;
+    }
+
+
+    /* -----------------------------------------------------
+       TOP BAR
+    ----------------------------------------------------- */
+
+    .top-bar {
+        display: flex;
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        width: 100%;
+
+        gap: 12px;
+
+        margin-bottom: 25px;
+    }
+
+
+    /* -----------------------------------------------------
+       SEARCH
+    ----------------------------------------------------- */
+
+    .search-container {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .search-container input {
+        width: 100%;
+
+        height: 50px;
+
+        padding:
+            12px
+            15px
+            12px
+            42px;
+
+        font-size: 16px;
+    }
+
+    .search-icon {
+        left: 15px;
+    }
+
+    .search-btn {
+        width: 100%;
+
+        height: 48px;
+
+        margin:
+            8px
+            0
+            0;
+
+        font-size: 15px;
+    }
+
+    #searchSuggestions {
+        width: 100%;
+    }
+
+
+    /* -----------------------------------------------------
+       CREATE BUTTON
+    ----------------------------------------------------- */
+
+    .create-btn {
+        width: 100%;
+
+        min-height: 48px;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        padding: 12px;
+
+        text-align: center;
+
+        font-size: 15px;
+    }
+
+
+    /* -----------------------------------------------------
+       ACTIVITIES
+    ----------------------------------------------------- */
+
+    .activities {
+        width: 100%;
+
+        padding: 18px;
+
+        border-radius: 14px;
+
+        overflow-x: auto;
+
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .section-header {
+        gap: 15px;
+    }
+
+    .section-header h2 {
+        margin: 0;
+
+        font-size: 22px;
+    }
+
+    .view-more {
+        flex-shrink: 0;
+
+        padding:
+            9px
+            13px;
+    }
+
+
+    /* -----------------------------------------------------
+       TABLE
+    ----------------------------------------------------- */
+
+    .activities table {
+        width: 100%;
+
+        min-width: 650px;
+    }
+
+    th,
+    td {
+        padding: 11px;
+
+        font-size: 14px;
+    }
+
+
+    /* -----------------------------------------------------
+       CERTIFICATE GRID
+    ----------------------------------------------------- */
+
+    .certificate-grid {
+        grid-template-columns: 1fr;
+
+        gap: 18px;
+
+        margin-top: 25px;
+    }
+
+    .certificate-card {
+        width: 100%;
+
+        min-height: auto;
+
+        padding: 24px 20px;
+    }
+
+
+    /* -----------------------------------------------------
+       CREATE PAGE
+    ----------------------------------------------------- */
+
+    .create-page {
+        width: 100%;
+
+        max-width: none;
+
+        margin:
+            20px
+            auto;
+
+        padding: 0;
+    }
+
+    .page-header {
+        margin-bottom: 25px;
+    }
+
+    .page-header h1 {
+        font-size: 32px;
+
+        line-height: 1.2;
+    }
+
+    .page-header p {
+        font-size: 16px;
+
+        line-height: 1.5;
+    }
+
+}
+
+
+/* =========================================================
+   6. SMALL PHONES
+   376px – 480px
+========================================================= */
+
+@media (max-width: 480px) {
+
+    .content {
+        padding:
+            75px
+            15px
+            25px;
+    }
+
+    .mobile-menu-btn {
+        width: 46px;
+        height: 46px;
+
+        top: 12px;
+        left: 12px;
+    }
+
+    .company-name {
+        font-size: 25px;
+
+        margin-bottom: 20px;
+    }
+
+    .activities {
+        padding: 15px;
+    }
+
+    .section-header {
+        align-items: flex-start;
+    }
+
+    .section-header h2 {
+        font-size: 20px;
+    }
+
+    .view-more {
+        font-size: 12px;
+
+        padding:
+            7px
+            10px;
+    }
+
+    .certificate-card {
+        padding: 22px 17px;
+    }
+
+    .certificate-card h3 {
+        font-size: 19px;
+    }
+
+    .certificate-card p {
+        font-size: 14px;
+    }
+
+    .page-header h1 {
+        font-size: 29px;
+    }
+
+}
+
+
+/* =========================================================
+   7. VERY SMALL PHONES
+   320px – 375px
+========================================================= */
+
+@media (max-width: 375px) {
+
+    .content {
+        padding:
+            72px
+            12px
+            20px;
+    }
+
+    .mobile-menu-btn {
+        width: 44px;
+        height: 44px;
+
+        font-size: 21px;
+    }
+
+    .company-name {
+        font-size: 23px;
+    }
+
+    .activities {
+        padding: 12px;
+    }
+
+    .section-header h2 {
+        font-size: 18px;
+    }
+
+    .view-more {
+        font-size: 11px;
+
+        padding:
+            6px
+            9px;
+    }
+
+    .certificate-card {
+        padding: 20px 15px;
+    }
+
+    .certificate-card h3 {
+        font-size: 18px;
+    }
+
+    .card-icon {
+        width: 55px;
+        height: 55px;
+
+        font-size: 27px;
+    }
+
+}
+
+
+/* =========================================================
+   8. TOUCH DEVICES
+========================================================= */
+
+@media (hover: none) and (pointer: coarse) {
+
+    .sidebar nav a,
+    .dropdown-btn {
+        min-height: 48px;
+    }
+
+    .create-btn,
+    .search-btn,
+    .view-more {
+        min-height: 44px;
+    }
+
+}
+
+
+/* =========================================================
+   9. LANDSCAPE PHONES
+========================================================= */
+
+@media (max-width: 768px) and (orientation: landscape) {
+
+    .content {
+        padding-top: 70px;
+    }
+
+    .sidebar {
+        width: 260px !important;
+        min-width: 260px !important;
+    }
+
+    .sidebar-top {
+        padding: 10px 15px;
+    }
+
+    .sidebar nav a {
+        padding: 10px 20px;
+    }
+
+}
+
+
+/* =========================================================
+   10. SHORT SCREENS
+========================================================= */
+
+@media (max-height: 600px) and (max-width: 768px) {
+
+    .sidebar {
+        overflow-y: auto;
+    }
+
+    .mobile-menu-btn {
+        top: 10px;
+    }
+
+    .content {
+        padding-top: 65px;
+    }
+
+}

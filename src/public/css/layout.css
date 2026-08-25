@@ -1,0 +1,35 @@
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100%;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f7fb;
+}
+
+.layout {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+}
+
+.content {
+    flex: 1;
+    min-width: 0;
+    padding: 30px;
+    overflow-x: hidden;
+}
+
+footer {
+    margin-top: 30px;
+    color: #64748b;
+    font-size: 13px;
+}
