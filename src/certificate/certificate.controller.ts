@@ -23,6 +23,9 @@ import { UploadService } from 'src/cloudinary/upload.service';
 import { generate } from './pdf.service';
 import { UpdateCertificateDto } from 'src/utils/schema/DTO/update.certtificate';
 import { CreateCertificateDto } from 'src/utils/schema/DTO/certificate';
+import * as QRCode from 'qrcode';
+import { v4 as uuidv4 } from 'uuid';
+
 
 const storage = memoryStorage();
 
@@ -228,6 +231,44 @@ async searchSuggestions(
   @Query('q') q: string,
 ) {
   return this.certificatesService.searchSuggestions(q);
+}
+
+// =====================================
+// VERIFY CERTIFICATE
+// =====================================
+
+@Get('verify/:token')
+async verifyCertificate(
+  @Param('token') token: string,
+  @Res() res: Response,
+) {
+  const cert =
+    await this.certificatesService.findByVerificationToken(
+      token,
+    );
+
+  if (!cert) {
+    return res.status(404).render(
+      'certificates/verification-error',
+      {
+        title: 'Certificate Not Found',
+        message:
+          'This certificate could not be verified.',
+      },
+    );
+  }
+
+  return res.render(
+    'certificates/verify',
+    {
+      title: 'Certificate Verification',
+
+      certificate: cert,
+
+      pdfUrl:
+        `/certificates/verify/${token}/pdf`,
+    },
+  );
 }
 
   // =====================================
@@ -559,11 +600,28 @@ async deleteCertificate(
       );
 
       console.log(data);
-      const saved =
-        await this.certificatesService.create({
-          template: certificateName,
-          data,
-        });
+
+const verificationToken = uuidv4();
+
+const verificationUrl =
+  `http://localhost:3000/certificates/verify/${verificationToken}`;
+
+const qrCodeDataUrl =
+  await QRCode.toDataURL(
+    verificationUrl,
+    {
+      errorCorrectionLevel: 'M',
+      margin: 2,
+      width: 180,
+    },
+  );
+
+const saved =
+  await this.certificatesService.create({
+    template: certificateName,
+    data,
+    verificationToken,
+  });
 
       // ---------------------------------
       // Branding
@@ -576,39 +634,45 @@ async deleteCertificate(
       // Render EJS
       // ---------------------------------
 
-      const html =
-        await new Promise<string>(
-          (resolve, reject) => {
-           res.render(
+const html =
+  await new Promise<string>(
+    (resolve, reject) => {
+
+     res.render(
   `templates/${certificateName}`,
   {
     branding,
     data,
     isPdf: true,
-    layout: false
+    layout: false,
+
+    verificationToken,
+    verificationUrl,
+    qrCodeDataUrl,
   },
-  (err, renderedHtml) => {
-                if (err) {
-                  return reject(err);
-                }
 
-                if (
-                  !renderedHtml ||
-                  !renderedHtml.trim()
-                ) {
-                  return reject(
-                    new Error(
-                      'Rendered HTML is empty',
-                    ),
-                  );
-                }
+        (err, renderedHtml) => {
 
-                resolve(renderedHtml);
-              },
+          if (err) {
+            return reject(err);
+          }
+
+          if (
+            !renderedHtml ||
+            !renderedHtml.trim()
+          ) {
+            return reject(
+              new Error(
+                'Rendered HTML is empty',
+              ),
             );
-          },
-        );
+          }
 
+          resolve(renderedHtml);
+        },
+      );
+    },
+  );
       console.log(
         `✅ HTML GENERATED (${html.length} chars)`,
       );
@@ -692,5 +756,103 @@ async deleteCertificate(
     return 'calibration';
   }
 
+  // =====================================
+// VERIFIED CERTIFICATE PDF
+// =====================================
+
+@Get('verify/:token/pdf')
+async verifiedCertificatePdf(
+  @Param('token') token: string,
+  @Res() res: Response,
+) {
+  const cert =
+    await this.certificatesService.findByVerificationToken(
+      token,
+    );
+
+  if (!cert) {
+    throw new NotFoundException(
+      'Certificate not found',
+    );
+  }
+
+  const template = cert.template;
+
+  const branding =
+    await this.brandingService.getBranding();
+
+  const verificationUrl =
+    `${process.env.APP_URL || 'http://localhost:3000'}/certificates/verify/${token}`;
+
+  const qrCodeDataUrl =
+    await QRCode.toDataURL(
+      verificationUrl,
+      {
+        errorCorrectionLevel: 'M',
+        margin: 2,
+        width: 180,
+      },
+    );
+
+  const html =
+    await new Promise<string>(
+      (resolve, reject) => {
+
+        res.render(
+          `templates/${template}`,
+          {
+            branding,
+            data: cert.data,
+
+            isPdf: true,
+            layout: false,
+
+            verificationToken:
+              token,
+
+            verificationUrl,
+
+            qrCodeDataUrl,
+          },
+
+          (err, renderedHtml) => {
+
+            if (err) {
+              return reject(err);
+            }
+
+            if (
+              !renderedHtml ||
+              !renderedHtml.trim()
+            ) {
+              return reject(
+                new Error(
+                  'Rendered HTML is empty',
+                ),
+              );
+            }
+
+            resolve(renderedHtml);
+          },
+        );
+      },
+    );
+
+  const pdf =
+    await generate(
+      html,
+      template,
+    );
+
+  res.set({
+    'Content-Type':
+      'application/pdf',
+
+    'Content-Disposition':
+      `inline; filename="${template}-verified.pdf"`,
+  });
+
+  return res.send(pdf);
+}
 
 }

@@ -710,6 +710,153 @@ input:focus{
     opacity:1;
 }
 
+/* =====================================
+   EASY RESIZE CONTROLS
+   Change any value below to resize footer images
+===================================== */
+
+:root {
+  /* Company Stamp */
+  --stamp-width: 300px;
+  --stamp-max-height: 100px;
+
+  /* Certification logos (ASNT, LEEA, AWRF) */
+  --logo-width: 70px;
+  --logo-height: 56px;
+
+  /* QR Code */
+  --qr-size: 70px;
+  --qr-text-size: 5px;
+}
+
+/* ===========================
+   CERTIFICATE FOOTER
+=========================== */
+
+.certificate-footer {
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-top: 25px;
+  gap: 12px;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.footer-left {
+  width: 27%;
+  flex-shrink: 0;
+}
+
+.footer-title {
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.footer-name {
+  font-weight: bold;
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+.footer-qualification {
+  font-size: 12px;
+}
+
+.footer-center {
+  width: 36%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+
+.stamp-wrapper {
+  position: relative;
+  display: block;
+  width: var(--stamp-width);
+  max-width: var(--stamp-width);
+  box-sizing: border-box;
+}
+
+.company-block {
+  width: var(--stamp-width) !important;
+  max-width: var(--stamp-width) !important;
+  height: auto !important;
+  max-height: var(--stamp-max-height);
+  object-fit: contain;
+  display: block;
+}
+
+.stamp-overlay {
+  position: absolute;
+  bottom: 6px;
+  left: 12px;
+  width: 100%;
+  text-align: left;
+}
+
+.stamp-date {
+  font-size: 9px;
+  font-weight: 600;
+  color: skyblue;
+  white-space: nowrap;
+}
+
+.footer-right {
+  width: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.cert-logo {
+  width: var(--logo-width) !important;
+  height: var(--logo-height) !important;
+  max-width: var(--logo-width) !important;
+  max-height: var(--logo-height) !important;
+  object-fit: contain;
+  display: block;
+}
+
+/* QR */
+.qr-verification {
+  width: 15% !important;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  margin: 0 !important;
+  padding: 0 !important;
+  text-align: center;
+  flex-shrink: 0;
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
+}
+
+.qr-verification img {
+  width: var(--qr-size) !important;
+  height: var(--qr-size) !important;
+  max-width: var(--qr-size) !important;
+  max-height: var(--qr-size) !important;
+  object-fit: contain;
+  display: block;
+}
+
+.qr-text {
+  margin-top: 1px !important;
+  width: var(--qr-size) !important;
+  font-size: var(--qr-text-size) !important;
+  line-height: 1 !important;
+  color: #333;
+  text-align: center;
+}
+
 /* Print */
 
 @media print{
@@ -1456,165 +1603,83 @@ const fields = [
 <!-- FOOTER -->
 <!-- ===================================== -->
 
-<div class="footer">
+<div class="certificate-footer">
 
-<div
-<div
-style="
-margin-top:25px;
-display:flex;
-justify-content:space-between;
-align-items:flex-end;
-gap:20px;
-"
->
-<!-- LEFT -->
+  <!-- LEFT -->
+  <div class="footer-left">
 
-<div style="width:28%;">
+    <div class="footer-title">
+      TESTED AND INSPECTED BY
+    </div>
 
-<div
-style="
-font-size:13px;
-font-weight:bold;
-margin-bottom:5px;
-"
->
+    <div class="footer-name">
+      ADAMS IWEZOR
+    </div>
 
-TESTED AND INSPECTED BY
+    <div class="footer-qualification">
+      ASNT LEVEL II UT, PT & MT
+    </div>
 
+  </div>
 
-</div>
+  <!-- CENTER — STAMP -->
+  <div class="footer-center">
 
-<img
-id="inspectorSignature"
-src="<%= branding?.signature || '' %>"
-style="
-width:140px;
-display:block;
-"
->
+    <div class="stamp-wrapper">
 
-<div
-style="
-font-weight:bold;
-font-size:13px;
-"
->
+      <img
+        id="stamp"
+        class="company-block"
+        src="<%= branding?.stamp || '' %>"
+      >
 
-ADAMS IWEZOR
+      <div class="stamp-overlay">
+        <div class="stamp-date">
+          DATE :
+          <span id="stampDate">
+            <%=
+              d.date
+                ? new Date(d.date).toLocaleDateString('en-GB', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: '2-digit'
+                  })
+                : ''
+            %>
+          </span>
+        </div>
+      </div>
 
-</div>
+    </div>
 
-<div
-style="
-font-size:12px;
-"
->
+  </div>
 
-ASNT LEVEL II UT, PT & MT
+  <!-- RIGHT — LOGOS -->
+  <div class="footer-right">
 
-</div>
+    <img
+      id="asnt"
+      class="cert-logo"
+      src="<%= branding?.asnt || '' %>"
+    >
 
-</div>
+    <img
+      id="leea"
+      class="cert-logo"
+      src="<%= branding?.leea || '' %>"
+    >
 
-<!-- CENTER -->
+    <img
+      id="awrf"
+      class="cert-logo"
+      src="<%= branding?.awrf || '' %>"
+    >
 
-<div
-style="
-width:40%;
-text-align:center;
-"
->
+  </div>
 
-<div
-style="
-position:relative;
-display:inline-block;
-width:100%;
-max-width:320px;
-"
->
-
-<img
-id="stamp"
-src="<%= branding?.stamp || '' %>"
-style="
-width:100%;
-max-height:90px;
-"
->
-
-<div
-style="
-position:absolute;
-bottom:12px;
-left:20px;
-font-size:12px;
-font-weight:bold;
-color:skyblue;
-"
->
-
-DATE :
-
-<span id="stampDate">
-<%=
-d.date
-? new Date(d.date).toLocaleDateString(
-    'en-GB',
-    {
-        day:'2-digit',
-        month:'2-digit',
-        year:'2-digit'
-    }
-)
-: ''
-%>
-</span>
-</span>
+  <%- include('../dashboard/partials/qr-code') %>
 
 </div>
-
-</div>
-
-</div>
-
-<!-- RIGHT -->
-
-<div
-style="
-width:28%;
-display:flex;
-justify-content:flex-end;
-gap:6px;
-"
->
-
-<img
-id="asnt"
-src="<%= branding?.asnt || '' %>"
-style="height:40px;"
->
-
-<img
-id="leea"
-src="<%= branding?.leea || '' %>"
-style="height:40px;"
->
-
-<img
-id="awrf"
-src="<%= branding?.awrf || '' %>"
-style="height:40px;"
->
-
-</div>
-
-</div>
-
-</div>
-
-
 </div> <!-- END CERTIFICATE -->
 
 

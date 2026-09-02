@@ -33,165 +33,106 @@ function previewImage(input, targetId) {
 // 🔥 COLLECT ALL FORM DATA
 // =========================
 function collectData() {
+  const data = {};
 
-    const data = {};
+  // Helper for nested fields
+  function setNested(obj, path, value) {
+    const keys = path.split(".");
+    let current = obj;
 
-    // Helper for nested fields
-    function setNested(obj, path, value) {
-
-        const keys = path.split(".");
-
-        let current = obj;
-
-        while (keys.length > 1) {
-
-            const key = keys.shift();
-
-            if (!current[key]) {
-
-                current[key] = {};
-
-            }
-
-            current = current[key];
-
-        }
-
-        current[keys[0]] = value;
-
+    while (keys.length > 1) {
+      const key = keys.shift();
+      if (!current[key]) {
+        current[key] = {};
+      }
+      current = current[key];
     }
 
-    // =====================================
-    // NORMAL INPUTS
-    // =====================================
+    current[keys[0]] = value;
+  }
 
-    document
-        .querySelectorAll("input, textarea, select")
-        .forEach(input=>{
+  // =====================================
+  // NORMAL INPUTS
+  // =====================================
+  document
+    .querySelectorAll("input, textarea, select")
+    .forEach((input) => {
+      if (input.type === "file") return;
+      if (!input.name) return;
 
-            if(input.type==="file") return;
+      // Dynamic tables handled later
+      if (input.closest("tbody[data-table-name]")) return;
 
-            if(!input.name) return;
+      let value;
 
-            // Dynamic tables handled later
-            if(input.closest("tbody[data-table-name]")) return;
+      if (input.tagName === "SELECT") {
+        value = input.options[input.selectedIndex]?.text || "";
+      } else if (input.type === "checkbox") {
+        value = input.checked;
+      } else {
+        value = input.value.trim();
+      }
 
-            let value;
+      if (input.name.includes(".")) {
+        setNested(data, input.name, value);
+      } else {
+        data[input.name] = value;
+      }
+    });
 
-            if(input.tagName==="SELECT"){
+  // =====================================
+  // DYNAMIC TABLES
+  // =====================================
+  data.tables = [];
 
-                value=input.options[input.selectedIndex]?.text||"";
+  document.querySelectorAll("tbody[data-table-name]").forEach((tbody) => {
+    const rows = [];
 
-            }
+    tbody.querySelectorAll("tr").forEach((tr) => {
+      const values = [];
 
-            else if(input.type==="checkbox"){
+      tr.querySelectorAll("td").forEach((td) => {
+        // skip delete / action cells
+        if (
+          td.classList.contains("pdf-hide") ||
+          td.querySelector(".delete-btn")
+        ) {
+          return;
+        }
 
-                value=input.checked;
+        const input = td.querySelector("input, textarea, select");
+        if (!input) return; // e.g. S/N cell
 
-            }
+        let value;
 
-            else{
+        if (input.tagName === "SELECT") {
+          value = input.options[input.selectedIndex]?.text || "";
+        } else if (input.type === "checkbox") {
+          value = input.checked;
+        } else {
+          value = input.value.trim();
+        }
 
-                value=input.value.trim();
+        values.push(value);
+      });
 
-            }
+      const hasData = values.some((v) =>
+        typeof v === "boolean" ? v : String(v).trim() !== ""
+      );
 
-            if(input.name.includes(".")){
+      if (hasData) {
+        rows.push(values); // array style → row[0], row[1]…
+      }
+    });
 
-                setNested(data,input.name,value);
+    data.tables.push({
+      name: tbody.dataset.tableName,
+      rows,
+    });
+  });
 
-            }
-
-            else{
-
-                data[input.name]=value;
-
-            }
-
-        });
-
-    // =====================================
-    // DYNAMIC TABLES
-    // =====================================
-
-    data.tables=[];
-
-    document
-        .querySelectorAll("tbody[data-table-name]")
-        .forEach(tbody=>{
-
-            const rows=[];
-
-            tbody
-                .querySelectorAll("tr")
-                .forEach(tr=>{
-
-                    const row={};
-
-                    tr
-                        .querySelectorAll("input,textarea,select")
-                        .forEach(input=>{
-
-                            if(!input.name) return;
-
-                            let value;
-
-                            if(input.tagName==="SELECT"){
-
-                                value=input.options[input.selectedIndex]?.text||"";
-
-                            }
-
-                            else if(input.type==="checkbox"){
-
-                                value=input.checked;
-
-                            }
-
-                            else{
-
-                                value=input.value.trim();
-
-                            }
-
-                            row[input.name]=value;
-
-                        });
-
-                    const hasData=
-                        Object.values(row)
-                        .some(v=>
-
-                            typeof v==="boolean"
-
-                            ? v
-
-                            : String(v).trim()!==""
-
-                        );
-
-                    if(hasData){
-
-                        rows.push(row);
-
-                    }
-
-                });
-
-            data.tables.push({
-
-                name:tbody.dataset.tableName,
-
-                rows
-
-            });
-
-        });
-
-    return data;
-
-}
-
+  return data; // ← THIS WAS MISSING
+} // ← THIS WAS MISSING
 
 // =========================
 // 🔥 LOAD BRANDING
@@ -220,9 +161,7 @@ async function loadBranding() {
 
 function setImage(id, src) {
   const el = document.getElementById(id);
-
   if (!el || !src) return;
-
   el.src = src;
 }
 
@@ -232,31 +171,14 @@ loadBranding();
 // 🔥 ADD ROW (UNIVERSAL)
 // =========================
 function addRow(target) {
-
   let tbody = null;
 
-  // addRow('mpi-ut-report')
   if (typeof target === "string") {
-
-    tbody = document.querySelector(
-      `tbody[data-add-row="${target}"]`
-    );
-  }
-
-  // addRow(this)
-  else if (target instanceof HTMLElement) {
-
-    tbody = target
-      .closest("table")
-      ?.querySelector("tbody");
-  }
-
-  // addRow()
-  else {
-
-    tbody = document.querySelector(
-      "tbody[data-add-row]"
-    );
+    tbody = document.querySelector(`tbody[data-add-row="${target}"]`);
+  } else if (target instanceof HTMLElement) {
+    tbody = target.closest("table")?.querySelector("tbody");
+  } else {
+    tbody = document.querySelector("tbody[data-add-row]");
   }
 
   if (!tbody) {
@@ -264,65 +186,42 @@ function addRow(target) {
     return;
   }
 
-  const templateRow =
-    tbody.querySelector("tr");
-
+  const templateRow = tbody.querySelector("tr");
   if (!templateRow) {
     console.log("template row not found");
     return;
   }
 
-  const newRow =
-    templateRow.cloneNode(true);
+  const newRow = templateRow.cloneNode(true);
 
-  // Clear inputs
-  newRow
-    .querySelectorAll(
-      "input, textarea, select"
-    )
-    .forEach(el => {
+  newRow.querySelectorAll("input, textarea, select").forEach((el) => {
+    if (el.type === "checkbox") {
+      el.checked = false;
+    } else if (el.tagName === "SELECT") {
+      el.selectedIndex = 0;
+    } else {
+      el.value = "";
+    }
+  });
 
-      if (el.type === "checkbox") {
-        el.checked = false;
-      }
-
-      else if (
-        el.tagName === "SELECT"
-      ) {
-        el.selectedIndex = 0;
-      }
-
-      else {
-        el.value = "";
-      }
-
-    });
-
-  // Update S/N if present
-  const sn =
-    newRow.querySelector(".sn");
-
+  const sn = newRow.querySelector(".sn");
   if (sn) {
-
-    sn.textContent =
-      tbody.querySelectorAll("tr").length + 1;
+    sn.textContent = tbody.querySelectorAll("tr").length + 1;
   }
 
   tbody.appendChild(newRow);
 }
+
 // =========================
 // 🔥 DELETE ROW (UNIVERSAL)
 // =========================
 function deleteRow(btn) {
   const row = btn.closest("tr");
-
   if (!row) return;
 
   const tbody = row.closest("tbody");
-
   if (!tbody) return;
 
-  // Prevent deleting the last row
   if (tbody.rows.length <= 1) {
     alert("At least one row is required.");
     return;
@@ -330,10 +229,8 @@ function deleteRow(btn) {
 
   row.remove();
 
-  // Re-number S/N
   tbody.querySelectorAll("tr").forEach((tr, index) => {
     const sn = tr.querySelector(".sn");
-
     if (sn) {
       sn.textContent = index + 1;
     }
@@ -345,13 +242,11 @@ function deleteRow(btn) {
 // =========================
 async function downloadPDF(event) {
   const btn = event?.currentTarget || event?.target;
-  let hiddenElements = [];
   let url = null;
 
   try {
     document.body.classList.add("pdf-generating");
 
-    // Prevent double-clicks
     if (btn) {
       btn.disabled = true;
       btn.dataset.originalHtml = btn.innerHTML;
@@ -360,131 +255,68 @@ async function downloadPDF(event) {
       btn.style.cursor = "not-allowed";
     }
 
-
     // Wait for all images
     const images = [...document.images];
-
     await Promise.all(
-      images.map(img => {
-        if (!img.src || img.complete) {
-          return Promise.resolve();
-        }
-
-        return new Promise(resolve => {
+      images.map((img) => {
+        if (!img.src || img.complete) return Promise.resolve();
+        return new Promise((resolve) => {
           img.onload = resolve;
           img.onerror = resolve;
         });
       })
     );
 
-    // Collect form data
     const data = collectData();
 
     const formData = new FormData();
+    formData.append("type", document.body.dataset.certType || "GENERAL");
+    formData.append("data", JSON.stringify(data));
 
-    formData.append(
-      "type",
-      document.body.dataset.certType || "GENERAL"
-    );
-
-    formData.append(
-      "data",
-      JSON.stringify(data)
-    );
-
-    // Dynamic certificate image
-    const fileInput =
-      document.querySelector("input[data-field]");
-
+    const fileInput = document.querySelector("input[data-field]");
     if (fileInput?.files?.[0]) {
-      formData.append(
-        "image",
-        fileInput.files[0]
-      );
-
-      formData.append(
-        "imageField",
-        fileInput.dataset.field
-      );
+      formData.append("image", fileInput.files[0]);
+      formData.append("imageField", fileInput.dataset.field);
     }
 
-    // Generate PDF
-    const res = await fetch(
-      "http://localhost:3000/certificates/pdf",
-      {
-        method: "POST",
-        body: formData
-      }
-    );
+    const res = await fetch("http://localhost:3000/certificates/pdf", {
+      method: "POST",
+      body: formData,
+    });
 
     if (!res.ok) {
-      throw new Error(
-        `Server returned ${res.status}`
-      );
+      throw new Error(`Server returned ${res.status}`);
     }
 
     const blob = await res.blob();
-
     url = URL.createObjectURL(blob);
 
     const a = document.createElement("a");
-
     a.href = url;
-
-    a.download =
-      `${(
-        document.body.dataset.certType ||
-        "certificate"
-      ).toLowerCase()}.pdf`;
+    a.download = `${(
+      document.body.dataset.certType || "certificate"
+    ).toLowerCase()}.pdf`;
 
     document.body.appendChild(a);
-
     a.click();
-
     document.body.removeChild(a);
 
-    // Give browser time to start download
-    await new Promise(resolve =>
-      setTimeout(resolve, 500)
-    );
-
+    await new Promise((resolve) => setTimeout(resolve, 500));
   } catch (err) {
-
-    console.error(
-      "PDF Download Error:",
-      err
-    );
-
-    alert(
-      err?.message ||
-      "❌ Failed to download PDF"
-    );
-
+    console.error("PDF Download Error:", err);
+    alert(err?.message || "❌ Failed to download PDF");
   } finally {
-
-    console.log(
-      "Restoring PDF controls..."
-    );
-
-    document.body.classList.remove(
-      "pdf-generating"
-    );
-
+    document.body.classList.remove("pdf-generating");
 
     if (btn) {
       btn.disabled = false;
-
-      btn.innerHTML =
-        btn.dataset.originalHtml || "⬇";
-
+      btn.innerHTML = btn.dataset.originalHtml || "⬇ Download PDF";
       btn.style.opacity = "";
       btn.style.cursor = "";
     }
 
     if (url) {
-      setTimeout(() => {
-        URL.revokeObjectURL(url);
-      }, 3000);
+      setTimeout(() => URL.revokeObjectURL(url), 3000);
     }
   }
 }
@@ -492,84 +324,45 @@ async function downloadPDF(event) {
 // =====================================
 // DATE SYNC (UNIVERSAL)
 // =====================================
-
 function initStampDates() {
+  document.querySelectorAll("[data-stamp-date]").forEach((input) => {
+    const stamp = document.getElementById("stampDate");
+    if (!stamp) return;
 
-  document
-    .querySelectorAll("[data-stamp-date]")
-    .forEach(input => {
+    const update = () => {
+      if (!input.value) {
+        stamp.textContent = "";
+        return;
+      }
 
-      const stamp =
-        document.getElementById("stampDate");
+      const date = new Date(input.value);
+      stamp.textContent = date.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "2-digit",
+      });
+    };
 
-      if (!stamp) return;
-
-      const update = () => {
-
-        if (!input.value) {
-          stamp.textContent = "";
-          return;
-        }
-
-        const date = new Date(input.value);
-
-        stamp.textContent =
-          date.toLocaleDateString(
-            "en-GB",
-            {
-              day: "2-digit",
-              month: "2-digit",
-              year: "2-digit"
-            }
-          );
-      };
-
-      update();
-
-      input.addEventListener(
-        "change",
-        update
-      );
-
-      input.addEventListener(
-        "input",
-        update
-      );
-    });
+    update();
+    input.addEventListener("change", update);
+    input.addEventListener("input", update);
+  });
 }
 
-document.addEventListener(
-  "DOMContentLoaded",
-  initStampDates
-);
+document.addEventListener("DOMContentLoaded", initStampDates);
 
 // =====================================
 // 👁 VIEW MODE
 // =====================================
-
 document.addEventListener("DOMContentLoaded", () => {
+  const isView = document.body.dataset.isView === "true";
+  if (!isView) return;
 
-    const isView =
-        document.body.dataset.isView === "true";
-
-    if (!isView) {
-        return;
+  document.querySelectorAll("input, textarea, select").forEach((field) => {
+    if (field.tagName === "SELECT") {
+      field.disabled = true;
+    } else {
+      field.readOnly = true;
     }
-
-    document
-        .querySelectorAll("input, textarea, select")
-        .forEach(field => {
-
-            if (field.tagName === "SELECT") {
-
-                field.disabled = true;
-
-            } else {
-
-                field.readOnly = true;
-
-            }
-
-        });
-
+  });
 });

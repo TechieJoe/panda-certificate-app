@@ -19,6 +19,7 @@ export class Certificate {
   })
   template: string;
 
+
   @Prop({
     type: Object,
     required: true,
@@ -26,10 +27,23 @@ export class Certificate {
   })
   data: Record<string, any>;
 
+
   @Prop({
     default: 'new',
   })
   status: 'new' | 'edited';
+
+
+  // =====================================
+  // QR VERIFICATION TOKEN
+  // =====================================
+
+  @Prop({
+    required: true,
+    unique: true,
+    index: true,
+  })
+  verificationToken: string;
 }
 
 export const CertificateSchema =

@@ -13,428 +13,459 @@ const viewMode =
 %>
 
 <style>
+    /* =====================================
+       EASY RESIZE CONTROLS
+       Change any value below to resize footer images
+    ===================================== */
+
+    :root {
+      /* Signature */
+      --sig-width: 180px;
+      --sig-max-height: 90px;
+
+      /* Company Stamp */
+      --stamp-width: 320px;
+      --stamp-max-height: 90px;
+
+      /* Certification logos (ASNT, LEEA, AWRF) */
+      --logo-width: 52px;
+      --logo-height: 36px;
+
+      /* QR Code */
+      --qr-size:80px;
+      --qr-text-size: 10px;
+    }
+
     /* ========== CERTIFICATE BASE ========== */
 
-    @page{
-    size:A4;
-    margin:auto;
-}
+    @page {
+      size: A4;
+      margin: auto;
+    }
 
-   html,
-body{
-    margin: auto;
-    padding:0;
-    background:#ffffff3e;
-}
+    html,
+    body {
+      margin: auto;
+      padding: 0;
+      background: #ffffff3e;
+    }
 
-body[data-cert-type="calibration"]{
-    background:#fff !important;
-}
+    body[data-cert-type="calibration"] {
+      background: #fff !important;
+    }
 
-.certificate{
-    background:#fff;
-    width:210mm;
-    min-height:297mm;
-    margin: auto;
-    padding:0 18px 15px;
-    box-sizing:border-box;
-    box-shadow:0 0 12px rgba(0,0,0,.15);
-}
+    .certificate {
+      background: #fff;
+      width: 210mm;
+      min-height: 297mm;
+      margin: auto;
+      padding: 0 18px 15px;
+      box-sizing: border-box;
+      box-shadow: 0 0 12px rgba(0, 0, 0, .15);
+    }
 
     /* ========== LETTERHEAD ========== */
-    .cert-header{
-    text-align:center;
-    margin:0;
-    padding:0;
-}
+    .cert-header {
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
 
-    .cert-header img#letterhead{
-    width:100%;
-    max-width:100%;
-    max-height:80px;
-    display:block;
-    margin:0;
-}
+    .cert-header img#letterhead {
+      width: 100%;
+      max-width: 100%;
+      max-height: 80px;
+      display: block;
+      margin: 0;
+    }
 
     /* ========== TITLE ========== */
     .title {
-        text-align: center;
-        font-size: 22px;
-        font-weight: bold;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        margin: 12px 0 18px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin: 12px 0 18px;
     }
 
     /* ========== TOP INFO (2 columns) ========== */
     .top-info {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 8px 28px;
-        margin-bottom: 16px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 28px;
+      margin-bottom: 16px;
     }
 
     .field {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        min-height: 26px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 26px;
     }
 
     .field label {
-        font-weight: bold;
-        white-space: nowrap;
-        min-width: 115px;
+      font-weight: bold;
+      white-space: nowrap;
+      min-width: 115px;
     }
 
     .field input {
-        flex: 1;
-        border: none;
-        border-bottom: 1px solid #000;
-        background: transparent;
-        font-size: 13px;
-        padding: 2px 4px;
-        outline: none;
+      flex: 1;
+      border: none;
+      border-bottom: 1px solid #000;
+      background: transparent;
+      font-size: 13px;
+      padding: 2px 4px;
+      outline: none;
     }
 
     /* ========== CERTIFICATION TEXT ========== */
     .cert-text {
-        font-size: 12px;
-        text-align: justify;
-        line-height: 1.45;
-        margin: 16px 0 18px;
+      font-size: 12px;
+      text-align: justify;
+      line-height: 1.45;
+      margin: 16px 0 18px;
     }
 
     /* ========== SECTION TITLE ========== */
     .section-title {
-        text-align: center;
-        font-weight: bold;
-        font-size: 14px;
-        text-transform: uppercase;
-        margin-bottom: 8px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 14px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
     }
 
     /* ========== TEST DATA TABLE ========== */
     #testTable {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 12px;
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 12px;
     }
 
     #testTable th,
     #testTable td {
-        border: 1px solid #000;
-        padding: 6px 8px;
-        text-align: center;
-        vertical-align: middle;
+      border: 1px solid #000;
+      padding: 6px 8px;
+      text-align: center;
+      vertical-align: middle;
     }
 
     #testTable th {
-        background: #f5f5f5;
-        font-weight: bold;
-        font-size: 12px;
+      background: #f5f5f5;
+      font-weight: bold;
+      font-size: 12px;
     }
 
     #testTable input {
-        width: 100%;
-        border: none;
-        background: transparent;
-        text-align: center;
-        font-size: 13px;
-        outline: none;
+      width: 100%;
+      border: none;
+      background: transparent;
+      text-align: center;
+      font-size: 13px;
+      outline: none;
     }
 
     /* ========== EQUIPMENT IMAGE ========== */
-.equipment-image-section {
-    margin: 24px 0;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    page-break-inside: avoid;
-    break-inside: avoid;
-}
-
-.equipment-image-title {
-    font-weight: bold;
-    margin-bottom: 10px;
-    font-size: 14px;
-    text-transform: uppercase;
-}
-
-.equipment-image-box {
-    width: 220px;
-    height: 120px;
-    border: 1px solid #000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0 auto;
-    overflow: hidden;
-    background: #fff;
-}
-
-.equipment-image {
-    max-width: 100%;
-    max-height: 100%;
-    width: auto;
-    height: auto;
-    object-fit: contain;
-    display: block;
-}
-
-.image-upload-container {
-    margin-top: 12px;
-    display: flex;
-    justify-content: center;
-}
-
-.image-upload-container input[type="file"] {
-    text-align: center;
-}
-
-/* ===========================
-   FOOTER
-=========================== */
-
-.certificate-footer{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:flex-end;
-
-    margin-top:25px;
-
-    gap:20px;
-
-    page-break-inside:avoid;
-
-    break-inside:avoid;
-
-}
-
-.footer-left{
-
-    width:30%;
-
-}
-
-.footer-title{
-
-    font-weight:bold;
-
-    font-size:13px;
-
-    margin-bottom:6px;
-
-}
-
-.signature-img{
-
-    width:140px;
-
-    height:auto;
-
-    display:block;
-
-}
-
-.signature-img{
-    display:none;
-}
-
-.footer-name{
-
-    font-weight:bold;
-
-    margin-top:5px;
-
-    font-size:12px;
-
-}
-
-.footer-qualification{
-
-    font-size:11px;
-
-}
-
-.footer-center {
-    width: 40%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-}
-
-.stamp-wrapper {
-    position: relative;
-    display: block;
-    width: 300px;
-    margin: 0 auto;
-}
-
-.company-block {
-    width: 300px;
-    height: auto;
-    display: block;
-}
- 
-.stamp-overlay {
-    position: absolute;
-    left: -180px;
-    right: 0;
-    bottom: 18px;
-    text-align: center ;
-}
-
-.stamp-date {
-    font-size: 12px;
-    font-weight: bold;
-    color: #3f9cff;
-    white-space: nowrap;
-}
-
-.footer-right{
-
-    width:30%;
-
-    display:flex;
-
-    justify-content:flex-end;
-
-    align-items:flex-end;
-
-    gap:10px;
-
-}
-
-.cert-logo{
-
-    height:42px;
-
-    width:auto;
-
-}
-    /* ========== BUTTONS (only when not PDF) ========== */
-    .delete-btn {
-        background: #e74c3c;
-        color: white;
-        border: none;
-        border-radius: 3px;
-        width: 26px;
-        height: 26px;
-        cursor: pointer;
-        font-size: 14px;
+    .equipment-image-section {
+      margin: 24px 0;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      page-break-inside: avoid;
+      break-inside: avoid;
     }
 
-    button {
-        padding: 6px 14px;
-        background: #2c3e50;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 13px;
+    .equipment-image-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+      font-size: 14px;
+      text-transform: uppercase;
     }
 
-    button:hover {
-        opacity: 0.9;
+    .equipment-image-box {
+      width: 220px;
+      height: 120px;
+      border: 1px solid #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 auto;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .equipment-image {
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      display: block;
+    }
+
+    .image-upload-container {
+      margin-top: 12px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .image-upload-container input[type="file"] {
+      text-align: center;
     }
 
     /* ===========================
-   FLOATING DOWNLOAD BUTTON
-=========================== */
+       FOOTER
+    =========================== */
 
-.floating-download {
-    position: fixed;
-    top: 18px;
-    right: 24px;
-    z-index: 9999;
+    .certificate-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 25px;
+      gap: 12px;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    .footer-left {
+      width: 27%;
+      flex-shrink: 0;
+    }
+
+    .footer-title {
+      font-weight: bold;
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    .signature-img {
+      width: var(--sig-width);
+      max-height: var(--sig-max-height);
+      height: auto;
+      object-fit: contain;
+      display: block;
+      margin: 3px 0;
+    }
+
+    .footer-name {
+      font-weight: bold;
+      margin-top: 5px;
+      font-size: 12px;
+    }
+
+    .footer-qualification {
+      font-size: 11px;
+    }
+
+    .footer-center {
+      width: 36%;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .stamp-wrapper {
+      position: relative;
+      display: block;
+      width: var(--stamp-width);
+      max-width: var(--stamp-width);
+      margin: 0 auto;
+      box-sizing: border-box;
+    }
+
+    .company-block {
+      width: var(--stamp-width) !important;
+      max-width: var(--stamp-width) !important;
+      height: auto !important;
+      max-height: var(--stamp-max-height);
+      object-fit: contain;
+      display: block;
+    }
+
+  .stamp-overlay {
+  position: absolute;
+  bottom: 8px;          /* vertical position inside the stamp */
+  left: 50%;            /* start from the horizontal center */
+  transform: translateX(-120%);  /* pull it back so it sits in the middle */
+  width: auto;
+  text-align: center;
+  pointer-events: none;
 }
 
-.download-btn {
-    background: #0f172a;
-    color: #fff;
-    border: none;
-    border-radius: 999px;
-    padding: 12px 18px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.18);
-    display: flex;
-    align-items: center;
-    gap: 8px;
+.stamp-date {
+  font-size: 10px;      /* slightly larger so it stays readable on the bigger stamp */
+  font-weight: 600;
+  color: #3f9cff;
+  white-space: nowrap;
 }
 
-.download-btn:hover {
-    background: #1e293b;
-    transform: translateY(-1px);
-}
+    .footer-right {
+      width: 20%;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .cert-logo {
+      width: var(--logo-width) !important;
+      height: var(--logo-height) !important;
+      max-width: var(--logo-width) !important;
+      max-height: var(--logo-height) !important;
+      object-fit: contain;
+      display: block;
+    }
+
+    /* QR (matches the shared partial) */
+    .qr-verification {
+      width: 15% !important;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      margin: 0 !important;
+      padding: 0 !important;
+      text-align: center;
+      flex-shrink: 0;
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
+    }
+
+    .qr-verification img {
+      width: var(--qr-size) !important;
+      height: var(--qr-size) !important;
+      max-width: var(--qr-size) !important;
+      max-height: var(--qr-size) !important;
+      object-fit: contain;
+      display: block;
+    }
+
+    .qr-text {
+      margin-top: 1px !important;
+      width: var(--qr-size) !important;
+      font-size: var(--qr-text-size) !important;
+      line-height: 1 !important;
+      color: #333;
+      text-align: center;
+    }
+
+    /* ========== BUTTONS (only when not PDF) ========== */
+    .delete-btn {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      border-radius: 3px;
+      width: 26px;
+      height: 26px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    button {
+      padding: 6px 14px;
+      background: #2c3e50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    /* ===========================
+       FLOATING DOWNLOAD BUTTON
+    =========================== */
+
+    .floating-download {
+      position: fixed;
+      top: 18px;
+      right: 24px;
+      z-index: 9999;
+    }
+
+    .download-btn {
+      background: #0f172a;
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      padding: 12px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .download-btn:hover {
+      background: #1e293b;
+      transform: translateY(-1px);
+    }
 
     /* ========== PRINT / PDF ========== */
 
-    @media print{
+    @media print {
+      html,
+      body {
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #fff !important;
+      }
 
-    html,
-    body{
-        margin:0 !important;
-        padding:0 !important;
-        background:#fff !important;
-    }
+      .certificate {
+        width: 100%;
+        margin: 0;
+        padding: 0 18px 15px;
+        box-shadow: none;
+        background: #fff;
+      }
 
-    .certificate{
-        width:100%;
-        margin:0;
-        padding:0 18px 15px;
-        box-shadow:none;
-        background:#fff;
-    }
-
-    .pdf-hide{
-        display:none !important;
-    }
-   
-       .floating-download {
+      .pdf-hide {
         display: none !important;
-    
-         }
-}
+      }
+
+      .floating-download {
+        display: none !important;
+      }
+    }
 </style>
 
 <body data-cert-type="calibration" data-is-view="<%= viewMode ? 'true' : 'false' %>">
 
-
-<!-- ========== YOUR EXISTING HTML STARTS HERE ========== -->
 <div id="certificate" class="certificate">
 
-        <% if (!isPdf) { %>
+    <% if (!isPdf) { %>
     <div class="floating-download pdf-hide">
        <button
-    type="button"
-    class="download-btn"
-    onclick="downloadPDF(event)"
->
-    ⬇ Download PDF
-</button>
-
+            type="button"
+            class="download-btn"
+            onclick="downloadPDF(event)"
+        >
+            ⬇ Download PDF
+        </button>
     </div>
     <% } %>
-
 
     <!-- ===================================== -->
     <!-- LETTERHEAD -->
     <!-- ===================================== -->
     <div class="cert-header">
       <img
-id="letterhead"
-src="<%= branding?.letterhead || '' %>"
->
-
+        id="letterhead"
+        src="<%= branding?.letterhead || '' %>"
+      >
     </div>
 
     <!-- ===================================== -->
@@ -514,12 +545,12 @@ src="<%= branding?.letterhead || '' %>"
         <div class="field">
             <label>TEST DATE:</label>
             <input
-    id="inspectionDate"
-    type="date"
-    name="testDate"
-    data-stamp-date
-    value="<%= d.testDate || '' %>"
->
+                id="inspectionDate"
+                type="date"
+                name="testDate"
+                data-stamp-date
+                value="<%= d.testDate || '' %>"
+            >
         </div>
 
         <div class="field">
@@ -581,10 +612,10 @@ src="<%= branding?.letterhead || '' %>"
         </thead>
 
         <tbody
-    id="tableBody"
-    data-table-name="testData"
-    data-add-row="testData"
->
+            id="tableBody"
+            data-table-name="testData"
+            data-add-row="testData"
+        >
              <% if (rows.length) { %> 
                 <% rows.forEach(function(row){ %>
                 <tr>
@@ -600,15 +631,12 @@ src="<%= branding?.letterhead || '' %>"
                     <% if (!isPdf) { %>
                     <td class="pdf-hide">
                        <button
-type="button"
-class="delete-btn"
-onclick="deleteRow(this)"
->
-
-×
-
-</button>
-
+                            type="button"
+                            class="delete-btn"
+                            onclick="deleteRow(this)"
+                        >
+                            ×
+                        </button>
                     </td>
                     <% } %>
                 </tr>
@@ -616,20 +644,20 @@ onclick="deleteRow(this)"
             <% } else { %>
                 <% for(let i = 0; i < 1; i++){ %>
                <tr>
-    <td><input type="text" name="actualApplied"></td>
-    <td><input type="text" name="instrumentReading"></td>
-    <td><input type="text" name="remark"></td>
+                    <td><input type="text" name="actualApplied"></td>
+                    <td><input type="text" name="instrumentReading"></td>
+                    <td><input type="text" name="remark"></td>
 
-    <% if (!isPdf) { %>
-    <td class="pdf-hide">
-        <button type="button"
-                class="delete-btn"
-                onclick="deleteRow(this)">
-            ✕
-        </button>
-    </td>
-    <% } %>
-</tr>
+                    <% if (!isPdf) { %>
+                    <td class="pdf-hide">
+                        <button type="button"
+                                class="delete-btn"
+                                onclick="deleteRow(this)">
+                            ✕
+                        </button>
+                    </td>
+                    <% } %>
+                </tr>
                 <% } %>
             <% } %>
         </tbody>
@@ -637,107 +665,105 @@ onclick="deleteRow(this)"
 
     <% if (!isPdf) { %>
     <div class="pdf-hide" style="margin-top:10px; text-align:right;">
-    <button
-    type="button"
-    onclick="addRow('testData')"
->
-    + Add Row
-</button>
-
+        <button
+            type="button"
+            onclick="addRow('testData')"
+        >
+            + Add Row
+        </button>
     </div>
     <% } %>
 
     <!-- ===================================== -->
     <!-- EQUIPMENT IMAGE -->
     <!-- ===================================== -->
-<div class="equipment-image-section">
+    <div class="equipment-image-section">
 
-    <div class="equipment-image-title">
-        EQUIPMENT IMAGE
-    </div>
-
-    <input
-        id="<%= imageField %>Input"
-        type="file"
-        accept="image/*"
-        data-field="<%= imageField %>"
-        onchange="previewImage(this,'<%= imageField %>')"
-        style="display:none;"
-    >
-
-    <div class="equipment-image-box">
-
-        <img
-            id="<%= imageField %>"
-            class="equipment-image"
-            src="<%= d.images?.[imageField] || d.equipmentImage || '' %>"
-            style="<%= (d.images?.[imageField] || d.equipmentImage) ? '' : 'display:none;' %>"
-        >
-
-    </div>
-
-    <% if (!isPdf) { %>
-
-    <div class="image-upload-container pdf-hide">
-
-        <button
-            type="button"
-            onclick="document.getElementById('<%= imageField %>Input').click()"
-        >
-            🖼 Select Image
-        </button>
-
-    </div>
-
-    <% } %>
-
-</div>
-
-<div class="certificate-footer">
-
-    <!-- Inspector -->
-    <div class="footer-left">
-
-        <div class="footer-title">
-            TESTED BY
+        <div class="equipment-image-title">
+            EQUIPMENT IMAGE
         </div>
 
-        <img
-            id="inspectorSignature"
-            class="signature-img"
-            src="<%= branding?.signature || '' %>"
+        <input
+            id="<%= imageField %>Input"
+            type="file"
+            accept="image/*"
+            data-field="<%= imageField %>"
+            onchange="previewImage(this,'<%= imageField %>')"
+            style="display:none;"
         >
 
-        <div class="footer-name">
-            ADAMS IWEZOR
-        </div>
-
-        <div class="footer-qualification">
-            ASNT LEVEL II UT, PT & MT
-        </div>
-
-    </div>
-
-    <!-- Stamp -->
-    <div class="footer-center">
-
-        <div class="stamp-wrapper">
+        <div class="equipment-image-box">
 
             <img
-                id="stamp"
-                class="company-block"
-                src="<%= branding?.stamp || '' %>"
+                id="<%= imageField %>"
+                class="equipment-image"
+                src="<%= d.images?.[imageField] || d.equipmentImage || '' %>"
+                style="<%= (d.images?.[imageField] || d.equipmentImage) ? '' : 'display:none;' %>"
             >
 
-            <div class="stamp-overlay">
+        </div>
 
-                <div class="stamp-date">
+        <% if (!isPdf) { %>
 
-                    DATE :
+        <div class="image-upload-container pdf-hide">
 
-                    <span id="stampDate">
-                        <%= d.testDate || '' %>
-                    </span>
+            <button
+                type="button"
+                onclick="document.getElementById('<%= imageField %>Input').click()"
+            >
+                🖼 Select Image
+            </button>
+
+        </div>
+
+        <% } %>
+
+    </div>
+
+    <!-- ===================================== -->
+    <!-- FOOTER -->
+    <!-- ===================================== -->
+    <div class="certificate-footer">
+
+        <!-- Inspector -->
+        <div class="footer-left">
+
+            <div class="footer-title">
+                TESTED BY
+            </div>
+
+            <div class="footer-name">
+                ADAMS IWEZOR
+            </div>
+
+            <div class="footer-qualification">
+                ASNT LEVEL II UT, PT & MT
+            </div>
+
+        </div>
+
+        <!-- Stamp -->
+        <div class="footer-center">
+
+            <div class="stamp-wrapper">
+
+                <img
+                    id="stamp"
+                    class="company-block"
+                    src="<%= branding?.stamp || '' %>"
+                >
+
+                <div class="stamp-overlay">
+
+                    <div class="stamp-date">
+
+                        DATE :
+
+                        <span id="stampDate">
+                            <%= d.testDate || '' %>
+                        </span>
+
+                    </div>
 
                 </div>
 
@@ -745,43 +771,43 @@ onclick="deleteRow(this)"
 
         </div>
 
-    </div>
+        <!-- Logos -->
+        <div class="footer-right">
 
-    <!-- Logos -->
-    <div class="footer-right">
+            <% if (branding?.asnt) { %>
+            <img
+                id="asnt"
+                class="cert-logo"
+                src="<%= branding.asnt %>"
+            >
+            <% } %>
 
-        <% if (branding?.asnt) { %>
-        <img
-            id="asnt"
-            class="cert-logo"
-            src="<%= branding.asnt %>"
-        >
-        <% } %>
+            <% if (branding?.leea) { %>
+            <img
+                id="leea"
+                class="cert-logo"
+                src="<%= branding.leea %>"
+            >
+            <% } %>
 
-        <% if (branding?.leea) { %>
-        <img
-            id="leea"
-            class="cert-logo"
-            src="<%= branding.leea %>"
-        >
-        <% } %>
+            <% if (branding?.awrf) { %>
+            <img
+                id="awrf"
+                class="cert-logo"
+                src="<%= branding.awrf %>"
+            >
+            <% } %>
 
-        <% if (branding?.awrf) { %>
-        <img
-            id="awrf"
-            class="cert-logo"
-            src="<%= branding.awrf %>"
-        >
-        <% } %>
+        </div>
+
+        <%- include('../dashboard/partials/qr-code') %>
 
     </div>
 
 </div>
 
 <% if (!isPdf) { %>
-
 <script src="/js/certificate.js"></script>
-
 <% } %>
 
 </body>

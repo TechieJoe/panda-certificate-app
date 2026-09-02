@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { randomBytes } from 'crypto';
 
 import {
   Certificate,
@@ -17,22 +18,25 @@ export class CertificatesService {
     private readonly certificateModel: Model<CertificateDocument>,
   ) {}
 
-  // =========================
-  // CREATE
-  // =========================
+// =========================
+// CREATE
+// =========================
+
 async create(
   dto: {
     template: string;
     data: Record<string, any>;
+    verificationToken: string;
   },
 ) {
   return this.certificateModel.create({
     template: dto.template,
     data: dto.data,
+    verificationToken: dto.verificationToken,
   });
 }
 
-  // =========================
+// =========================
   // GET ALL
   // =========================
   async findAll() {
@@ -305,5 +309,18 @@ async searchHistory(filters: {
     };
 }
 
+// =========================
+// FIND BY VERIFICATION TOKEN
+// =========================
+
+async findByVerificationToken(
+  verificationToken: string,
+) {
+  return this.certificateModel
+    .findOne({
+      verificationToken,
+    })
+    .lean();
+}
 
 }

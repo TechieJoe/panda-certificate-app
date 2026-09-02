@@ -1,0 +1,16 @@
+<% if (isPdf && qrCodeDataUrl) { %>
+
+    <div class="qr-verification">
+
+        <img
+            src="<%= qrCodeDataUrl %>"
+            alt="Certificate Verification QR Code"
+        >
+
+        <div class="qr-text">
+            Scan to verify certificate
+        </div>
+
+    </div>
+
+<% } %>
