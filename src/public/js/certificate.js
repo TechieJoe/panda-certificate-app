@@ -139,7 +139,7 @@ function collectData() {
 // =========================
 async function loadBranding() {
   try {
-    const res = await fetch("http://localhost:3000/branding");
+    const res = await fetch("https://panda-certificate-app-production.up.railway.app/certificates/branding");
 
     if (!res.ok) {
       throw new Error("Branding fetch failed");
@@ -279,7 +279,7 @@ async function downloadPDF(event) {
       formData.append("imageField", fileInput.dataset.field);
     }
 
-    const res = await fetch("http://localhost:3000/certificates/pdf", {
+    const res = await fetch("https://panda-certificate-app-production.up.railway.app/certificates/pdf", {
       method: "POST",
       body: formData,
     });
