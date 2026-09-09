@@ -15,7 +15,6 @@ const shackleRows =
 
 const viewMode =
   typeof isView !== 'undefined' ? isView : false;
-
 %>
 
 <!DOCTYPE html>
@@ -43,50 +42,63 @@ body{
 
 #certificate{
   width:210mm;
+  min-height:297mm;          /* full A4 height */
   margin:auto;
-  padding:5mm 20mm 20mm 20mm;
+  padding:3mm 16mm 8mm 16mm;
   box-sizing:border-box;
   background:#fff;
+
+  display:flex;
+  flex-direction:column;
+}
+
+/* main content grows and fills space */
+.certificate-body{
+  flex:1 1 auto;
 }
 
 .cert-header{
-  margin:-5mm -12mm 5mm -12mm;
+  margin:-3mm -10mm 3mm -10mm;
 }
 
 .cert-header img{
   width:100%;
   display:block;
+  max-height:90px;
+  object-fit:contain;
 }
 
 h3{
   text-align:center;
-  margin:0 0 6px;
-  font-size:26px;
+  margin:0 0 4px;
+  font-size:20px;
 }
 
 h4{
-  margin:10px 0 6px;
+  margin:6px 0 4px;
+  font-size:12px;
 }
 
 .subtitle{
   text-align:center;
-  font-size:10px;
-  margin-bottom:10px;
-  line-height:1.4;
+  font-size:9px;
+  margin-bottom:6px;
+  line-height:1.25;
 }
 
 table{
   width:100%;
   border-collapse:collapse;
-  margin-bottom:8px;
+  margin-bottom:4px;
 }
 
 th,
 td{
   border:1px solid #000;
-  padding:4px;
+  padding:2px 3px;
   vertical-align:top;
   word-wrap:break-word;
+  line-height:1.15;
 }
 
 table,
@@ -112,11 +124,6 @@ textarea{
   resize:none;
 }
 
-/* =====================================
-   DATE INPUT
-   USES NATIVE HTML DATE ICON
-===================================== */
-
 input[type="date"]{
   width:100%;
   border:none;
@@ -127,32 +134,27 @@ input[type="date"]{
   box-sizing:border-box;
 }
 
-/*
-   When generating the PDF, remove the
-   browser calendar icon but keep the date.
-*/
 <% if (isPdf) { %>
-
 input[type="date"]{
   appearance:none !important;
   -webkit-appearance:none !important;
 }
 
-input[type="date"]::-webkit-calendar-picker-indicator{
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="date"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-clear-button{
   display:none !important;
   -webkit-appearance:none !important;
+  opacity:0 !important;
+  width:0 !important;
+  height:0 !important;
+  pointer-events:none !important;
 }
-
 <% } %>
-
-
-textarea{
-  resize:none;
-}
 
 .image-box{
   width:100%;
-  height:170px;
+  height:140px;
   border:1px solid #000;
   display:flex;
   align-items:center;
@@ -183,113 +185,67 @@ textarea{
   font-size:18px;
 }
 
-/* =====================================
-   FLOATING DOWNLOAD BUTTON
-===================================== */
+.section-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+  margin:6px 0 3px;
+  font-weight:bold;
+}
+
+.section-head input{
+  width:160px;
+  border-bottom:1px solid #000;
+  text-align:center;
+}
+
+.inline-label{
+  font-weight:normal;
+  white-space:nowrap;
+}
 
 .floating-toolbar{
-    position:fixed;
-    top:18px;
-    right:24px;
-    z-index:9999;
+  position:fixed;
+  top:18px;
+  right:24px;
+  z-index:9999;
 }
 
 .toolbar-btn{
-
-    min-width:52px;
-    height:46px;
-
-    padding:0 16px;
-
-    border:none;
-    border-radius:999px;
-
-    background:#0f172a;
-    color:#fff;
-
-    font-family:Arial, Helvetica, sans-serif;
-    font-size:13px;
-    font-weight:600;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:8px;
-
-    cursor:pointer;
-
-    box-shadow:
-        0 5px 15px rgba(0,0,0,.18);
-
-    transition:
-        background .2s ease,
-        transform .2s ease,
-        box-shadow .2s ease;
+  min-width:52px;
+  height:46px;
+  padding:0 16px;
+  border:none;
+  border-radius:999px;
+  background:#0f172a;
+  color:#fff;
+  font-family:Arial, Helvetica, sans-serif;
+  font-size:13px;
+  font-weight:600;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  cursor:pointer;
+  box-shadow:0 5px 15px rgba(0,0,0,.18);
 }
 
-.toolbar-btn:hover{
-
-    background:#1e293b;
-
-    transform:translateY(-2px);
-
-    box-shadow:
-        0 8px 20px rgba(0,0,0,.23);
+/* FOOTER */
+/* footer sticks to bottom of the page */
+.certificate-footer{
+  width:100%;
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:10px;
+  margin-top:auto;           /* key: pushes footer down */
+  padding:8px 0 0;
+  box-sizing:border-box;
+  page-break-inside:avoid !important;
+  break-inside:avoid !important;
+  page-break-before:avoid !important;
 }
-
-.toolbar-btn:active{
-    transform:translateY(0);
-}
-
-.toolbar-btn:disabled{
-
-    background:#334155 !important;
-
-    cursor:not-allowed !important;
-
-    opacity:.9 !important;
-
-    transform:none !important;
-
-    animation:downloadPulse 1.2s ease-in-out infinite;
-}
-
-@keyframes downloadPulse{
-
-    0%{
-        box-shadow:0 5px 15px rgba(0,0,0,.18);
-    }
-
-    50%{
-        box-shadow:0 5px 24px rgba(15,23,42,.45);
-    }
-
-    100%{
-        box-shadow:0 5px 15px rgba(0,0,0,.18);
-    }
-
-}
-
-/* =====================================
-   CERTIFICATE FOOTER
-===================================== */
-
-.certificate-footer {
-  width: 100%;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 16px;                 /* space between left / center / right / QR */
-  margin-top: 12px;
-  padding: 0 4px;
-  box-sizing: border-box;
-  page-break-inside: avoid !important;
-  break-inside: avoid !important;
-}
-
-/* =====================================
-   LEFT — SIGNATURE
-===================================== */
 
 .footer-left {
   width: 24%;
@@ -297,12 +253,8 @@ textarea{
   flex: 0 1 24%;
   box-sizing: border-box;
   text-align: left;
-  padding-right: 8px;
+  padding-right: 6px;
 }
-
-/* =====================================
-   CENTER — STAMP
-===================================== */
 
 .footer-center {
   width: 32%;
@@ -313,12 +265,8 @@ textarea{
   justify-content: center;
   align-items: flex-end;
   text-align: center;
-  padding: 0 8px;
+  padding: 0 6px;
 }
-
-/* =====================================
-   RIGHT — COMPANY LOGOS
-===================================== */
 
 .footer-right {
   width: 22%;
@@ -329,106 +277,11 @@ textarea{
   justify-content: center;
   align-items: flex-end;
   gap: 6px;
-  padding: 0 8px;
+  padding: 0 6px;
 }
-
-/* =====================================
-   QR — OWN SPACE
-===================================== */
 
 .qr-verification {
   width: 16%;
-  min-width: 0;
-  flex: 0 0 16%;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  margin: 0;
-  padding: 0 4px;
-  text-align: center;
-  page-break-inside: avoid !important;
-  break-inside: avoid !important;
-}
-
-/* =====================================
-   SIGNATURE
-===================================== */
-
-.signature-img {
-  width: 115px;
-  max-height: 45px;
-
-  object-fit: contain;
-}
-
-
-/* =====================================
-   COMPANY LOGOS
-===================================== */
-
-.cert-logo {
-  width: 45px;
-  height: 30px;
-
-  max-width: 45px;
-  max-height: 30px;
-
-  object-fit: contain;
-
-  display: block;
-}
-
-/* =====================================
-   STAMP — larger
-===================================== */
-
-.stamp-wrapper {
-  position: relative;
-  width: 240px !important;
-  max-width: 100% !important;   /* stay inside center column */
-  margin-left: 0;
-  margin-right: 0;
-  box-sizing: border-box;
-}
-
-.company-block {
-  width: 100% !important;
-  max-width: 240px !important;
-  height: auto;
-  max-height: 110px;
-  object-fit: contain;
-  display: block;
-  margin: 0 auto;
-}
-
-/* =====================================
-   STAMP DATE
-===================================== */
-
-.stamp-overlay {
-  position: absolute;
-  bottom: 10px;
-  left: 18px;          /* nudge right a bit on the larger stamp */
-  width: auto;
-  text-align: left;
-  pointer-events: none;
-}
-
-.stamp-date {
-  font-size: 11px;
-  font-weight: bold;
-  color: skyblue;
-  white-space: nowrap;
-}
-
-/* =====================================
-   QR — OWN SPACE
-===================================== */
-
-.qr-verification {
-  width: 18%;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -441,58 +294,85 @@ textarea{
   break-inside: avoid !important;
 }
 
-/* =====================================
-   QR IMAGE
-===================================== */
+.signature-img {
+  width: 100px;
+  max-height: 38px;
+  object-fit: contain;
+}
 
-.qr-verification img {
-  width: 75px !important;
-  height: 75px !important;
-  max-width: 75px !important;
-  max-height: 75px !important;
+.cert-logo {
+  width: 40px;
+  height: 28px;
+  max-width: 40px;
+  max-height: 28px;
   object-fit: contain;
   display: block;
 }
 
-/* =====================================
-   QR TEXT
-===================================== */
+.stamp-wrapper {
+  position: relative;
+  width: 180px !important;
+  max-width: 100% !important;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.company-block {
+  width: 100% !important;
+  max-width: 180px !important;
+  height: auto;
+  max-height: 80px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+}
+
+.stamp-overlay {
+  position: absolute;
+  bottom: 8px;
+  left: 14px;
+  width: auto;
+  text-align: left;
+  pointer-events: none;
+}
+
+.stamp-date {
+  font-size: 10px;
+  font-weight: bold;
+  color: skyblue;
+  white-space: nowrap;
+}
+
+.qr-verification img {
+  width: 56px !important;
+  height: 56px !important;
+  max-width: 56px !important;
+  max-height: 56px !important;
+  object-fit: contain;
+  display: block;
+}
 
 .qr-text {
-  margin-top: 2px;
-  width: 75px;
-  font-size: 8px;
+  margin-top: 1px;
+  width: 56px;
+  font-size: 7px;
   line-height: 1.1;
   color: #333;
   text-align: center;
 }
 
-/* Hide calendar icon only when generating PDF */
-<% if (isPdf) { %>
-input[type="date"] {
-  appearance: none !important;
-  -webkit-appearance: none !important;
-}
-
-input[type="date"]::-webkit-calendar-picker-indicator,
-input[type="date"]::-webkit-inner-spin-button,
-input[type="date"]::-webkit-clear-button {
-  display: none !important;
-  -webkit-appearance: none !important;
-  opacity: 0 !important;
-  width: 0 !important;
-  height: 0 !important;
-  pointer-events: none !important;
-}
-<% } %>
-
-
-
-/* =====================================
-   PRINT
-===================================== */
-
 @media print {
+html, body{
+    margin:0 !important;
+    padding:0 !important;
+  }
+
+  #certificate{
+    min-height:297mm !important;
+    height:297mm !important;
+    padding:3mm 16mm 6mm 16mm !important;
+  }
+
 
   .pdf-hide {
     display: none !important;
@@ -501,12 +381,10 @@ input[type="date"]::-webkit-clear-button {
   .certificate-footer {
     page-break-inside: avoid !important;
     break-inside: avoid !important;
-  }
+    page-break-before: avoid !important;
+    margin-top:auto !important;
 
-  /*
-     Hide native browser calendar icon
-     in printed/PDF version.
-  */
+  }
 
   input[type="date"]::-webkit-calendar-picker-indicator {
     display:none !important;
@@ -517,12 +395,9 @@ input[type="date"]::-webkit-clear-button {
     appearance:none !important;
     -webkit-appearance:none !important;
   }
-
 }
 
 </style>
-
-
 </head>
 
 <body
@@ -533,33 +408,25 @@ input[type="date"]::-webkit-clear-button {
 <div id="certificate">
 
 <div class="cert-header">
-
 <img
 id="letterhead"
 src="<%= branding?.letterhead || '' %>"
 >
-
 </div>
-
 
 <h3>
 CERTIFICATE OF THOROUGH VISUAL AND NDT
 </h3>
 
-
 <div class="subtitle">
-
 STATUTORY INSTRUMENT 1998 NO. 2307 –
 The Lifting Operations and Lifting Equipment Regulations 1998
 <br>
-
 STATUTORY INSTRUMENT 2008 NO. 1597 –
 The Supply of Machinery (Safety) Regulations 1992
 <br>
-
 STATUTORY INSTRUMENT 1998 NO. 2306 –
 The Provision and Use of Work Equipment Regulations 1998
-
 </div>
 
 
@@ -570,192 +437,224 @@ The Provision and Use of Work Equipment Regulations 1998
 <table>
 
 <tr>
-
-<td style="width:74%;">
-
-<table>
-
-<tr>
-
 <td>
 Equipment Type:
 <br>
-
-<input
-name="equipmentType"
-value="<%= d.equipmentType || '' %>"
->
+<input name="equipmentType" value="<%= d.equipmentType || '' %>">
 </td>
-
-<td>
+<td colspan="2">
 Certificate No:
 <br>
-
-<input
-name="certificateNo"
-value="<%= d.certificateNo || '' %>"
->
+<input name="certificateNo" value="<%= d.certificateNo || '' %>">
 </td>
-
 </tr>
 
-
 <tr>
-
 <td>
 Equipment Owner:
 <br>
-
-<input
-name="equipmentOwner"
-value="<%= d.equipmentOwner || '' %>"
->
+<input name="equipmentOwner" value="<%= d.equipmentOwner || '' %>">
 </td>
-
-<td>
+<td colspan="2">
 Manufacturer:
 <br>
-
-<input
-name="manufacturer"
-value="<%= d.manufacturer || '' %>"
->
+<input name="manufacturer" value="<%= d.manufacturer || '' %>">
 </td>
-
 </tr>
 
-
 <tr>
-
 <td>
 Production Cert. No:
 <br>
-
-<input
-name="productionCertNo"
-value="<%= d.productionCertNo || '' %>"
->
+<input name="productionCertNo" value="<%= d.productionCertNo || '' %>">
 </td>
-
+<td>
+Design Temp:
+<br>
+<input name="designTemp" value="<%= d.designTemp || '-20°C' %>">
+</td>
 <td>
 Production Date:
 <br>
-
-<input
-type="date"
-name="productionDate"
-value="<%= d.productionDate || '' %>"
->
+<input type="date" name="productionDate" value="<%= d.productionDate || '' %>">
 </td>
-
 </tr>
 
-
 <tr>
-
 <td>
 Specification:
 <br>
-
-<input
-name="specification"
-value="<%= d.specification || '' %>"
->
+<input name="specification" value="<%= d.specification || '' %>">
 </td>
-
-<td>
+<td colspan="2">
 Edition:
 <br>
-
-<input
-name="edition"
-value="<%= d.edition || '2006' %>"
->
+<input name="edition" value="<%= d.edition || '2006' %>">
 </td>
-
 </tr>
 
-
 <tr>
-
 <td>
 MPI Method:
 <br>
-
-<input
-name="mpiMethod"
-value="<%= d.mpiMethod || '' %>"
->
+<input name="mpiMethod" value="<%= d.mpiMethod || '' %>">
 </td>
-
-<td>
+<td colspan="2">
 Method:
 <br>
-
-<input
-name="method"
-value="<%= d.method || 'Continuous' %>"
->
+<input name="method" value="<%= d.method || 'Continuous' %>">
 </td>
-
 </tr>
 
-
 <tr>
-
 <td>
 Equipment Used:
 <br>
-
-<input
-name="equipmentUsed"
-value="<%= d.equipmentUsed || 'Bar Magnet Pool' %>"
->
+<input name="equipmentUsed" value="<%= d.equipmentUsed || 'Bar Magnet' %>">
 </td>
-
-<td>
-Spacing:
+<td colspan="2">
+Pool Spacing:
 <br>
-
-<input
-name="spacing"
-value="<%= d.spacing || '100mm' %>"
->
+<input name="spacing" value="<%= d.spacing || '100mm' %>">
 </td>
-
 </tr>
 
+<tr>
+<td>
+Contact Media:
+<br>
+<input name="contactMedia" value="<%= d.contactMedia || '' %>">
+</td>
+<td colspan="2">
+Indicator:
+<br>
+<input name="indicator" value="<%= d.indicator || '' %>">
+</td>
+</tr>
 
 <tr>
-
 <td>
 Location:
 <br>
-
-<input
-name="location"
-value="<%= d.location || '' %>"
->
+<input name="location" value="<%= d.location || '' %>">
 </td>
-
-<td>
+<td colspan="2">
 Test Procedure:
 <br>
-
-<input
-name="testProcedure"
-value="<%= d.testProcedure || 'PD/030' %>"
->
+<input name="testProcedure" value="<%= d.testProcedure || 'PD/030' %>">
 </td>
-
 </tr>
 
 </table>
 
+
+<!-- =====================================
+     EQUIPMENT DETAIL LIMITS + IMAGE
+===================================== -->
+
+<table>
+<tr>
+
+<td style="width:74%; vertical-align:top;">
+
+<h4 style="margin-top:0;">
+EQUIPMENT DETAIL LIMITS
+</h4>
+
+<table>
+
+<tr>
+<td>Radius / Angle of Test:</td>
+<td>
+<input name="radiusAngle" value="<%= d.radiusAngle || '' %>">
+</td>
+</tr>
+
+<tr>
+<td>Designed Tare Weight:</td>
+<td>
+<input name="tareWeight" value="<%= d.tareWeight || '' %>">
+</td>
+</tr>
+
+<tr>
+<td><b>SWL:</b></td>
+<td>
+<input name="swl" value="<%= d.swl || '' %>">
+</td>
+</tr>
+
+<tr>
+<td>Gross Weight:</td>
+<td>
+<input name="grossWeight" value="<%= d.grossWeight || '' %>">
+</td>
+</tr>
+
+<tr>
+<td>Serial No:</td>
+<td>
+<input name="serialNo" value="<%= d.serialNo || '' %>">
+</td>
+</tr>
+
+<tr>
+<td>Equipment Dimensions:</td>
+<td>
+Length
+<input style="width:22%;display:inline-block;" name="length" value="<%= d.length || '' %>">
+Width
+<input style="width:22%;display:inline-block;" name="width" value="<%= d.width || '' %>">
+Height
+<input style="width:22%;display:inline-block;" name="height" value="<%= d.height || '' %>">
+</td>
+</tr>
+
+<tr>
+<td>Date of Inspection:</td>
+<td>
+<input
+  type="date"
+  id="inspectionDate"
+  name="inspectionDate"
+  data-stamp-date
+  value="<%= d.inspectionDate || '' %>"
+>
+</td>
+</tr>
+
+<tr>
+<td>Next Due Date:</td>
+<td>
+<input type="date" name="nextDueDate" value="<%= d.nextDueDate || '' %>">
+</td>
+</tr>
+
+<tr>
+<td>Test procedure:</td>
+<td>
+<input name="detailTestProcedure" value="<%= d.detailTestProcedure || 'PD-006' %>">
+</td>
+</tr>
+
+<tr>
+<td>Parts Examined:</td>
+<td>
+<input name="partsExamined" value="<%= d.partsExamined || '' %>">
+</td>
+</tr>
+
+<tr>
+<td>Remark:</td>
+<td>
+<input name="detailRemark" value="<%= d.detailRemark || '' %>">
+</td>
+</tr>
+
+</table>
 </td>
 
-
-<td style="width:26%;">
+<td style="width:26%; vertical-align:top;">
 
 <input
 id="<%= imageField %>Input"
@@ -767,12 +666,10 @@ style="display:none;"
 >
 
 <div class="image-box">
-
 <img
 id="<%= imageField %>"
 src="<%= d.images?.[imageField] || '' %>"
 >
-
 </div>
 
 <button
@@ -784,155 +681,7 @@ onclick="document.getElementById('<%= imageField %>Input').click()"
 </button>
 
 </td>
-
 </tr>
-
-</table>
-
-
-<h4>
-EQUIPMENT DETAIL LIMITS
-</h4>
-
-
-<table>
-
-<tr>
-
-<td>
-Radius / Angle of Test:
-<br>
-
-<input
-name="radiusAngle"
-value="<%= d.radiusAngle || '' %>"
->
-</td>
-
-<td>
-Designed Tare Weight:
-<br>
-
-<input
-name="tareWeight"
-value="<%= d.tareWeight || '' %>"
->
-</td>
-
-</tr>
-
-
-<tr>
-
-<td>
-SWL:
-<br>
-
-<input
-name="swl"
-value="<%= d.swl || '' %>"
->
-</td>
-
-<td>
-Gross Weight:
-<br>
-
-<input
-name="grossWeight"
-value="<%= d.grossWeight || '' %>"
->
-</td>
-
-</tr>
-
-
-<tr>
-
-<td>
-Serial No:
-<br>
-
-<input
-name="serialNo"
-value="<%= d.serialNo || '' %>"
->
-</td>
-
-<td></td>
-
-</tr>
-
-
-<tr>
-
-<td colspan="2">
-
-Equipment Dimensions:
-<br>
-
-Length:
-
-<input
-style="width:25%;"
-name="length"
-value="<%= d.length || '' %>"
->
-
-Width:
-
-<input
-style="width:25%;"
-name="width"
-value="<%= d.width || '' %>"
->
-
-Height:
-
-<input
-style="width:25%;"
-name="height"
-value="<%= d.height || '' %>"
->
-
-</td>
-
-</tr>
-
-
-<tr>
-
-<td>
-
-Date of Inspection:
-<br>
-
-<input
-type="date"
-id="inspectionDate"
-name="inspectionDate"
-data-stamp-date
-value="<%= d.inspectionDate || '' %>"
->
-
-</td>
-
-
-<td>
-
-Next Due Date:
-<br>
-
-<input
-type="date"
-name="nextDueDate"
-value="<%= d.nextDueDate || '' %>"
->
-
-</td>
-
-</tr>
-
 </table>
 
 
@@ -940,206 +689,80 @@ value="<%= d.nextDueDate || '' %>"
      SLING
 ===================================== -->
 
-<h4>
-SLING
-</h4>
-
+<div class="section-head">
+  <div>
+    SLING
+    <span class="inline-label">In accordance with</span>
+  </div>
+  <div>
+    DNV CERT NO:
+    <input name="slingDnvCertNo" value="<%= d.slingDnvCertNo || 'NIL' %>">
+  </div>
+</div>
 
 <table>
-
 <thead>
-
 <tr>
-
 <th>S/N</th>
 <th>Description</th>
 <th>SWL</th>
 <th>Test Date</th>
 <th>Next Due Date</th>
 <th>Remark</th>
-
 <% if(!isPdf){ %>
-
-<th class="pdf-hide">
-DEL
-</th>
-
+<th class="pdf-hide">DEL</th>
 <% } %>
-
 </tr>
-
 </thead>
 
-
-<tbody
-data-table-name="sling"
-data-add-row="sling"
->
-
+<tbody data-table-name="sling" data-add-row="sling">
 
 <% if(slingRows.length){ %>
-
-
 <% slingRows.forEach((row,index)=>{ %>
-
 <tr>
-
-<td class="sn">
-<%= index + 1 %>
-</td>
-
-
-<td>
-
-<textarea name="description"><%= row.description || '' %></textarea>
-
-</td>
-
-
-<td>
-
-<textarea name="swl"><%= row.swl || '' %></textarea>
-
-</td>
-
-
-<td>
-
-<input
-type="date"
-name="testDate"
-value="<%= row.testDate || '' %>"
->
-
-</td>
-
-
-<td>
-
-<input
-type="date"
-name="nextDueDate"
-value="<%= row.nextDueDate || '' %>"
->
-
-</td>
-
-
-<td>
-
-<textarea name="remark"><%= row.remark || '' %></textarea>
-
-</td>
-
-
+<td class="sn"><%= index + 1 %></td>
+<td><textarea name="description" rows="1"><%= row.description || '' %></textarea></td>
+<td><textarea name="swl" rows="1"><%= row.swl || '' %></textarea></td>
+<td><input type="date" name="testDate" value="<%= row.testDate || '' %>"></td>
+<td><input type="date" name="nextDueDate" value="<%= row.nextDueDate || '' %>"></td>
+<td><textarea name="remark" rows="1"><%= row.remark || '' %></textarea></td>
 <% if(!isPdf){ %>
-
 <td class="action-cell pdf-hide">
-
-<button
-type="button"
-class="delete-btn"
-onclick="deleteRow(this)"
->
-×
-</button>
-
+<button type="button" class="delete-btn" onclick="deleteRow(this)">×</button>
 </td>
-
 <% } %>
-
 </tr>
-
 <% }) %>
-
-
 <% } else { %>
-
-
 <tr>
-
-<td class="sn">
-1
-</td>
-
-
-<td>
-
-<textarea name="description"></textarea>
-
-</td>
-
-
-<td>
-
-<textarea name="swl"></textarea>
-
-</td>
-
-
-<td>
-
-<input
-type="date"
-name="testDate"
->
-
-</td>
-
-
-<td>
-
-<input
-type="date"
-name="nextDueDate"
->
-
-</td>
-
-
-<td>
-
-<textarea name="remark"></textarea>
-
-</td>
-
-
+<td class="sn">1</td>
+<td><textarea name="description" rows="1"></textarea></td>
+<td><textarea name="swl" rows="1"></textarea></td>
+<td><input type="date" name="testDate"></td>
+<td><input type="date" name="nextDueDate"></td>
+<td><textarea name="remark" rows="1"></textarea></td>
 <% if(!isPdf){ %>
-
 <td class="action-cell pdf-hide">
-
-<button
-type="button"
-class="delete-btn"
-onclick="deleteRow(this)"
->
-×
-</button>
-
+<button type="button" class="delete-btn" onclick="deleteRow(this)">×</button>
 </td>
-
 <% } %>
-
 </tr>
-
-
 <% } %>
-
 
 </tbody>
-
 </table>
 
+<table>
+<tr>
+<td style="width:30%;"><b>Test procedure:</b></td>
+<td>
+<input name="slingTestProcedure" value="<%= d.slingTestProcedure || 'PD 014' %>">
+</td>
+</tr>
+</table>
 
 <div class="pdf-hide">
-
-<button
-type="button"
-onclick="addRow('sling')"
->
-➕ Add Sling
-</button>
-
+<button type="button" onclick="addRow('sling')">➕ Add Sling</button>
 </div>
 
 
@@ -1147,241 +770,112 @@ onclick="addRow('sling')"
      SHACKLE
 ===================================== -->
 
-<h4>
-SHACKLE
-</h4>
-
+<div class="section-head">
+  <div>
+    SHACKLE
+    <span class="inline-label">In accordance with</span>
+  </div>
+  <div>
+    SPECS:
+    <input name="shackleSpecs" value="<%= d.shackleSpecs || 'BS' %>">
+  </div>
+</div>
 
 <table>
-
 <thead>
-
 <tr>
-
 <th>S/N</th>
 <th>Description</th>
 <th>SWL</th>
 <th>Test Date</th>
 <th>Next Due Date</th>
 <th>Remark</th>
-
 <% if(!isPdf){ %>
-
-<th class="pdf-hide">
-DEL
-</th>
-
+<th class="pdf-hide">DEL</th>
 <% } %>
-
 </tr>
-
 </thead>
 
-
-<tbody
-data-table-name="shackle"
-data-add-row="shackle"
->
-
+<tbody data-table-name="shackle" data-add-row="shackle">
 
 <% if(shackleRows.length){ %>
-
-
 <% shackleRows.forEach((row,index)=>{ %>
-
 <tr>
-
-<td class="sn">
-<%= index + 1 %>
-</td>
-
-
-<td>
-
-<textarea name="description"><%= row.description || '' %></textarea>
-
-</td>
-
-
-<td>
-
-<textarea name="swl"><%= row.swl || '' %></textarea>
-
-</td>
-
-
-<td>
-
-<input
-type="date"
-name="testDate"
-value="<%= row.testDate || '' %>"
->
-
-</td>
-
-
-<td>
-
-<input
-type="date"
-name="nextDueDate"
-value="<%= row.nextDueDate || '' %>"
->
-
-</td>
-
-
-<td>
-
-<textarea name="remark"><%= row.remark || '' %></textarea>
-
-</td>
-
-
+<td class="sn"><%= index + 1 %></td>
+<td><textarea name="description" rows="1"><%= row.description || '' %></textarea></td>
+<td><textarea name="swl" rows="1"><%= row.swl || '' %></textarea></td>
+<td><input type="date" name="testDate" value="<%= row.testDate || '' %>"></td>
+<td><input type="date" name="nextDueDate" value="<%= row.nextDueDate || '' %>"></td>
+<td><textarea name="remark" rows="1"><%= row.remark || '' %></textarea></td>
 <% if(!isPdf){ %>
-
 <td class="action-cell pdf-hide">
-
-<button
-type="button"
-class="delete-btn"
-onclick="deleteRow(this)"
->
-×
-</button>
-
+<button type="button" class="delete-btn" onclick="deleteRow(this)">×</button>
 </td>
-
 <% } %>
-
 </tr>
-
 <% }) %>
-
-
 <% } else { %>
-
-
 <tr>
-
-<td class="sn">
-1
-</td>
-
-
-<td>
-
-<textarea name="description"></textarea>
-
-</td>
-
-
-<td>
-
-<textarea name="swl"></textarea>
-
-</td>
-
-
-<td>
-
-<input
-type="date"
-name="testDate"
->
-
-</td>
-
-
-<td>
-
-<input
-type="date"
-name="nextDueDate"
->
-
-</td>
-
-
-<td>
-
-<textarea name="remark"></textarea>
-
-</td>
-
-
+<td class="sn">1</td>
+<td><textarea name="description" rows="1"></textarea></td>
+<td><textarea name="swl" rows="1"></textarea></td>
+<td><input type="date" name="testDate"></td>
+<td><input type="date" name="nextDueDate"></td>
+<td><textarea name="remark" rows="1"></textarea></td>
 <% if(!isPdf){ %>
-
 <td class="action-cell pdf-hide">
-
-<button
-type="button"
-class="delete-btn"
-onclick="deleteRow(this)"
->
-×
-</button>
-
+<button type="button" class="delete-btn" onclick="deleteRow(this)">×</button>
 </td>
-
 <% } %>
-
 </tr>
-
-
 <% } %>
-
 
 </tbody>
-
 </table>
 
+<table>
+<tr>
+<td style="width:30%;"><b>Test procedure:</b></td>
+<td>
+<input name="shackleTestProcedure" value="<%= d.shackleTestProcedure || 'PD 010' %>">
+</td>
+</tr>
+</table>
 
 <div class="pdf-hide">
-
-<button
-type="button"
-onclick="addRow('shackle')"
->
-➕ Add Shackle
-</button>
-
+<button type="button" onclick="addRow('shackle')">➕ Add Shackle</button>
 </div>
 
 
 <!-- =====================================
-     DOWNLOAD
+     REMARK
 ===================================== -->
+
+<p style="margin:4px 0 2px;">
+<b>Remark:</b>
+</p>
+<textarea
+  name="remark"
+  rows="2"
+  style="min-height:36px; max-height:48px;"
+><%= d.remark || '' %></textarea>
+
 
 <div class="floating-toolbar pdf-hide">
-
-<button
-class="toolbar-btn"
-onclick="downloadPDF(event)"
-title="Download PDF"
->
-
+<button class="toolbar-btn" onclick="downloadPDF(event)" title="Download PDF">
 ⬇ Download PDF
-
 </button>
-
 </div>
 
-
-<!-- =====================================
-     FOOTER
-===================================== -->
 
 <div class="certificate-footer">
 
-
-    <!-- SIGNATURE -->
-
     <div class="footer-left">
-
         <div>
-            TESTED BY
+            Equipment Tested by:
+        </div>
+        <div>
+            Name:
         </div>
 
         <img
@@ -1397,77 +891,48 @@ title="Download PDF"
         <div>
             ASNT LEVEL II UT, PT & MT
         </div>
-
     </div>
 
-
-    <!-- STAMP -->
-
     <div class="footer-center">
-
         <div class="stamp-wrapper">
-
             <img
                 id="stamp"
                 class="company-block"
                 src="<%= branding?.stamp || '' %>"
             >
-
             <div class="stamp-overlay">
-
                 <div class="stamp-date">
-
                     DATE :
-
                     <span id="stampDate">
-
-                        <%= d.inspectionDate || '' %>
-
+                      <%= d.inspectionDate
+                        ? new Date(d.inspectionDate).toLocaleDateString('en-GB', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: '2-digit'
+                          })
+                        : ''
+                      %>
                     </span>
-
                 </div>
-
             </div>
-
         </div>
-
     </div>
-
-
-    <!-- COMPANY LOGOS -->
 
     <div class="footer-right">
-
-        <img
-            id="asnt"
-            class="cert-logo"
-            src="<%= branding?.asnt || '' %>"
-        >
-
-        <img
-            id="leea"
-            class="cert-logo"
-            src="<%= branding?.leea || '' %>"
-        >
-
-        <img
-            id="awrf"
-            class="cert-logo"
-            src="<%= branding?.awrf || '' %>"
-        >
-
+        <img id="asnt" class="cert-logo" src="<%= branding?.asnt || '' %>">
+        <img id="leea" class="cert-logo" src="<%= branding?.leea || '' %>">
+        <img id="awrf" class="cert-logo" src="<%= branding?.awrf || '' %>">
     </div>
-
-
-    <!-- QR -->
 
     <%- include('../dashboard/partials/qr-code') %>
 
+</div>
 
 </div>
 
-
+<% if (!isPdf) { %>
 <script src="/js/certificate.js"></script>
+<% } %>
 
 </body>
 </html>
