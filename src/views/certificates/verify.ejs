@@ -2,163 +2,141 @@
 <html lang="en">
 
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta charset="UTF-8">
+  <title>
+    Certificate Verification
+  </title>
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-    <title>
-        Certificate Verification
-    </title>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f7fb;
+      color: #0f172a;
+    }
 
-    <style>
+    .verification-header {
+      background: #0f172a;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
 
-        * {
-            box-sizing: border-box;
-        }
+    .verification-header h1 {
+      margin: 0;
+      font-size: 22px;
+    }
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f5f7fb;
-            color: #0f172a;
-        }
+    .verification-header p {
+      margin: 8px 0 0;
+      color: #cbd5e1;
+      font-size: 14px;
+    }
 
-        .verification-header {
-            background: #0f172a;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
+    .verification-container {
+      max-width: 1200px;
+      margin: 25px auto;
+      padding: 0 15px;
+    }
 
-        .verification-header h1 {
-            margin: 0;
-            font-size: 22px;
-        }
+    .verification-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.08);
+    }
 
-        .verification-header p {
-            margin: 8px 0 0;
-            color: #cbd5e1;
-            font-size: 14px;
-        }
+    .verified {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #15803d;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
 
-        .verification-container {
-            max-width: 1200px;
-            margin: 25px auto;
-            padding: 0 15px;
-        }
+    .pdf-container {
+      width: 100%;
+      height: 80vh;
+      min-height: 600px;
+    }
 
-        .verification-card {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow:
-                0 4px 20px rgba(0,0,0,.08);
-        }
+    .pdf-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-radius: 8px;
+    }
 
-        .verified {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #15803d;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
+    .download-btn {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 12px 18px;
+      background: #2563eb;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+    }
 
-        .pdf-container {
-            width: 100%;
-            height: 80vh;
-            min-height: 600px;
-        }
+    @media (max-width: 768px) {
+      .verification-container {
+        margin: 15px auto;
+      }
 
-        .pdf-container iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            border-radius: 8px;
-        }
+      .verification-card {
+        padding: 12px;
+      }
 
-        .download-btn {
-            display: inline-block;
-            margin-top: 15px;
-            padding: 12px 18px;
-            background: #2563eb;
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-        }
-
-        @media (max-width: 768px) {
-
-            .verification-container {
-                margin: 15px auto;
-            }
-
-            .verification-card {
-                padding: 12px;
-            }
-
-            .pdf-container {
-                height: 75vh;
-                min-height: 500px;
-            }
-
-        }
-
-    </style>
-
+      .pdf-container {
+        height: 75vh;
+        min-height: 500px;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-    <header class="verification-header">
+  <header class="verification-header">
+    <h1>
+      PANDA INTEGRATED ENERGY SERVICES
+    </h1>
+    <p>
+      Certificate Verification
+    </p>
+  </header>
 
-        <h1>
-            PANDA INTEGRATED SERVICES LTD
-        </h1>
+  <main class="verification-container">
+    <div class="verification-card">
 
-        <p>
-            Certificate Verification
-        </p>
+      <div class="verified">
+        🟢 Certificate Verified
+      </div>
 
-    </header>
+      <div class="pdf-container">
+        <iframe
+          src="<%= pdfUrl %>"
+          title="Verified Certificate"
+        ></iframe>
+      </div>
 
+      <a
+        href="<%= pdfUrl %>"
+        target="_blank"
+        class="download-btn"
+      >
+        Open / Download PDF
+      </a>
 
-    <main class="verification-container">
-
-        <div class="verification-card">
-
-            <div class="verified">
-                🟢 Certificate Verified
-            </div>
-
-
-            <div class="pdf-container">
-
-                <iframe
-                    src="<%= pdfUrl %>"
-                    title="Verified Certificate"
-                ></iframe>
-
-            </div>
-
-
-            <a
-                href="<%= pdfUrl %>"
-                target="_blank"
-                class="download-btn"
-            >
-                Open / Download PDF
-            </a>
-
-        </div>
-
-    </main>
+    </div>
+  </main>
 
 </body>
-
 </html>

@@ -440,6 +440,7 @@ async verifyCertificate(
         title: 'Certificate Not Found',
         message:
           'This certificate could not be verified.',
+        layout: false, // no sidebar
       },
     );
   }
@@ -448,15 +449,12 @@ async verifyCertificate(
     'certificates/verify',
     {
       title: 'Certificate Verification',
-
       certificate: cert,
-
-      pdfUrl:
-        `/certificates/verify/${token}/pdf`,
+      pdfUrl: `/certificates/verify/${token}/pdf`,
+      layout: false, // no sidebar
     },
   );
 }
-
 
  // =====================================
 // VERIFIED CERTIFICATE PDF
