@@ -1,0 +1,104 @@
+
+# NDT Certificate Automation System
+
+A web-based certificate automation platform designed to streamline the creation and management of inspection certificates for Non-Destructive Testing (NDT) and inspection companies.
+
+This system was built to solve a real operational documentation problem encountered while working as an NDT Inspection Technician.
+
+---
+
+## Features
+
+- Automated high-quality PDF certificate generation using Puppeteer
+- Reusable browser-based certificate templates
+- Support for company branding elements:
+  - Letterheads
+  - Stamps
+  - Signatures
+  - Equipment images
+- Full CRUD functionality for certificate templates
+- Clean NestJS modular architecture
+- MongoDB for data persistence
+- Server-rendered interfaces using EJS
+- Designed for easy expansion into other certificate-based industries
+
+---
+
+## Tech Stack
+
+| Category          | Technology              |
+|-------------------|-------------------------|
+| Framework         | NestJS                  |
+| Language          | TypeScript              |
+| Database          | MongoDB + Mongoose      |
+| PDF Generation    | Puppeteer               |
+| Templating        | EJS                     |
+| Validation        | class-validator         |
+| Architecture      | Modular NestJS design   |
+
+---
+
+## Project Structure (Typical)
+
+src/
+├── certificates/           # Certificate module
+├── templates/              # Template management
+├── pdf/                    # PDF generation logic (Puppeteer)
+├── auth/                   # Authentication (if implemented)
+├── views/                  # EJS templates
+├── utils/
+└── main.ts
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js v18 or higher
+- MongoDB (local or Atlas)
+- Git
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/TechieJoe/YOUR-NDT-REPO-NAME.git
+
+# Navigate into the project
+cd YOUR-NDT-REPO-NAME
+
+# Install dependencies
+npm install
+
+# Environment Variables
+Create a .env file in the root directory:
+MONGODB_URI=mongodb://localhost:27017/ndt-certificates
+PORT=3000
+
+# Running the Application
+
+# Development mode
+npm run start:dev
+
+# Production mode
+npm run build
+
+The application will be available at:
+http://localhost:3000
+
+# Key Highlights
+
+Built from a real industry pain point (manual certificate preparation)
+Significantly reduces the time required to generate professional certificates
+Supports company-specific branding
+Structured for future scalability and multi-industry use
+
+# Author
+Kelechi Tochukwu Joseph
+
+Backend Developer | NestJS | TypeScript
+
+GitHub: TechieJoe
+LinkedIn: kelechi-tochukwu
+Email: kelechijoseph624@gmail.com
